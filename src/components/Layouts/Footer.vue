@@ -1,30 +1,24 @@
 <template>
-    <ul id="menu-bottom" class="nav nav-fill fixed-bottom" v-if="this.$store.getters.user">
-        <li class="nav-item">
-            <a class="nav-link active" href="#"> Thống kê</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Đại lý</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Thông tin</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Thông báo</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Phản hồi</a>
-        </li>
-    </ul>
+    <div class="navbar fixed-bottom bg-success" id="menu-bottom" v-show="this.$store.state.user.isLogin">
+        <router-link class="text-muted" :to="{name:'report_chart'}"><i class="fas fa-home"></i> Home</router-link>
+        <router-link class="text-muted" :to="{name:'code'}"><i class="fas fa-users"></i> Đại lý</router-link>
+        <router-link class="text-muted" :to="{name:'profile'}"><i class="fas fa-pencil-alt"></i> Hồ sơ</router-link>
+        <router-link class="text-muted" :to="{name:'notify'}"><i class="fa fa-fw fa-envelope"></i><sup>{{this.$store.state.user.notify_unread}}</sup></router-link>
+    </div>
+
 </template>
 
 <script>
     export default {
         name: "Footer",
-
     }
 </script>
 
 <style scoped>
-
+    #menu-bottom a {
+        color: #fff;
+    }
+    #menu-bottom a.router-link-active {
+        color: #fff!important;
+    }
 </style>

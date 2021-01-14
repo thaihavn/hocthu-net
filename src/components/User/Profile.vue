@@ -1,5 +1,6 @@
 <template>
     <div class="container ">
+
         <div class="row align-items-center justify-content-center my-5">
             <div class="col-12">
                 <h3 class="text-center">Thông Tin</h3>
@@ -7,73 +8,60 @@
             <div class="col-12 col-lg-8">
                 <ul class="nav nav-pills nav-fill">
                     <li class="nav-item">
-                        <a class="nav-link btn-outline-success active"  href="info.html">Cá nhân <i class="fa fa-pencil" aria-hidden="true"></i></a>
+                        <router-link :to="{name:'profile'}" class="nav-link btn-outline-success active" >Cá nhân <i class="fas fa-pencil-alt"></i></router-link>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link btn-outline-success " href="bank-info.html">Tài khoản <i class="fa fa-pencil" aria-hidden="true"></i></a>
+                        <router-link :to="{name:'user_bank'}">Tài khoản <i class="fas fa-pencil-alt"></i></router-link>
                     </li>
                 </ul>
-                <div class="information my-3">
+                <div class="information my-3 " v-show="user">
                     <p>
                         <b>Số điện thoại:</b>
                         <br>
-                        0977778818
+                        {{user.phone}}
                     </p>
                     <p>
                         <b>Họ và Tên:</b>
                         <br>
-                        Hoàng Thy Hoa
+                        {{user.fullName}}
                     </p>
                     <p>
                         <b>Email:</b>
                         <br>
-                        hoahoang80@gmail.com
-                    </p>
-                    <p><a href="doi-mat-khau.html">Đổi mật khẩu</a></p>
-                    <h4 class="text-center mb-4">Thông tin về nơi làm việc</h4>
-                    <p>
-                        <b>Thuộc Tỉnh/Thành phố:</b>
-                        <br>
-                        Hà Nội
+                        {{user.email}}
                     </p>
                     <p>
-                        <b>Quận Huyện:</b>
-                        <br>
-                        Cầu Giấy
-                    </p>
-                    <p>
-                        <b>Phường/Xã:</b>
-                        <br>
-                        Trung Hòa
-                    </p>
-                    <p>
-                        <b>Tên trường học, công ty…:</b>
-                        <br>
-                        Trường tiểu học Lê Hồng Phong
-                    </p>
+                        <router-link :to="{name:'change_password'}">Đổi mật khẩu</router-link>
+                    <h4 class="text-center mb-4">Nơi làm việc</h4>
                     <hr>
                     <div class="information-form my-3">
-                        <form action="#">
+                        <form v-on:submit="updateProfile($event)">
                             <div class="form-group">
                                 <label  class="font-weight-bold">Thuộc Tỉnh/Thành phố:</label>
-                                <input type="text" name="city"  class="form-control" placeholder="Hà Nội">
+                                <select class="form-control" v-model="user.idCity">
+                                    <option   v-for="city in listCity" :key="city.id" :value="city.id">{{city.name}}</option>
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label  class="font-weight-bold">Quận Huyện:</label>
-                                <input type="text" name="name"  class="form-control" placeholder="Cầu Giấy">
+                                <select class="form-control" v-model="user.idDistrict">
+                                    <option   v-for="district in listDistrict" :key="district.id" :value="district.id">{{district.name}}</option>
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label  class="font-weight-bold">Phường/Xã:</label>
-                                <input type="text" name="email"  class="form-control" placeholder="Trung Hòa">
+                                <select class="form-control" v-model="user.idWard">
+                                    <option   v-for="ward in listWard" :key="ward.id" :value="ward.id">{{ward.name}}</option>
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label  class="font-weight-bold">Tên trường học, công ty…:</label>
-                                <input type="text" name="email"  class="form-control" placeholder="Trường tiểu học Lê Hồng Phong">
+                                <input type="text" v-model="user.workPlace"  class="form-control" placeholder="">
                             </div>
                             <div class="form-group ">
                                 <div class="btn-group btn-block" role="group" aria-label="Basic example">
-                                    <button type="submit" class="btn  btn-success">Cập nhật</button>
-                                    <a  href="login.html" class="btn  ">Bỏ qua</a>
+                                    <button type="submit" class="btn btn-success">Cập nhật</button>
+<!--                                    <button type="reset" class="btn btn-danger">Bỏ qua</button>-->
                                 </div>
                             </div>
                         </form>
@@ -81,29 +69,119 @@
                 </div>
             </div>
         </div>
-        <ul id="menu-bottom" class="nav nav-fill fixed-bottom">
-            <li class="nav-item">
-                <a class="nav-link active" href="#"> Thống kê</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Đại lý</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Thông tin</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Thông báo</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Phản hồi</a>
-            </li>
-        </ul>
     </div>
 </template>
 
 <script>
     export default {
-        name: "Profile"
+        name: "Profile",
+        data:function (){
+            return {
+                user:this.$store.state.user.user,
+                errors: [],
+                onSubmit: false,
+            }
+        },
+        computed:{
+            listCity (){
+                return this.$store.state.user.city;
+            },
+            listDistrict(){
+                return this.$store.state.user.district
+            },
+            listWard(){
+                return this.$store.state.user.ward
+            }
+        },
+        created() {
+            var district =this.$store.state.user.district;
+            var ward =this.$store.state.user.ward;
+            this.$store.dispatch('user/getListCity');
+            if(this.user.idDistrict && district == null){
+                this.$store.dispatch('user/getListDistrict',this.user.idCity);
+            }
+            if(this.user.idWard && ward == null){
+                this.$store.dispatch('user/getListWard',{idCity:this.user.idCity,idDistrict:this.user.idDistrict});
+            }
+        },
+        watch: {
+            "user.idCity": function (val) {
+                this.$store.dispatch('user/getListDistrict',val);
+                this.user.idDistrict =null;
+            },
+            "user.idDistrict": function (val) {
+                this.$store.dispatch('user/getListWard',{idCity:this.user.idCity,idDistrict:val});
+                this.user.idWard =null;
+            },
+        },
+        methods: {
+            validationForm(){
+                this.errors=[];
+                if(!this.user.idCity){
+                    this.errors.push('Bạn chưa chọn thành phố!');
+                }
+                if(!this.user.idDistrict){
+                    this.errors.push('Bạn chưa chọn Tỉnh thành!');
+
+                }
+                if(!this.user.idWard){
+                    this.errors.push('Bạn chưa chọn Quận huyện!');
+
+                }
+                if(this.errors.length > 0){
+                    window.cmsHattApp.showError({
+                        message: this.errors.join('<br>'),
+                    });
+                    return false;
+                }else{
+                    return true;
+                }
+            },
+            updateProfile(e) {
+                e.preventDefault();
+                var me = this;
+                if (me.onSubmit) {
+                    return false;
+                }
+                if (!me.validationForm()) {
+                    return false;
+                }
+                me.onSubmit = true;
+
+                window.cmsHattApp.showConfirm({
+                    message: "Bạn chắc chắn muốn thay đổi?",
+                    callback: function (result) {
+                        if (result) {
+                            var api = window.appConfig.api.updateWorkVenue;
+                            window.axios({
+                                method: api.method,
+                                url: api.url,
+                                data:me.user,
+                                headers: {
+                                    'Content-type': 'application/json',
+                                }
+                            }).then((res) => {
+                                var message = '';
+                                if (res.data.status == "SUCCESS") {
+                                    message = window.cmsHattApp.getMessage(res.data) ?? "Cập nhật thông tin thành công!";
+                                    window.cmsHattApp.showSuccess({message:message});
+                                }else{
+                                    message = window.cmsHattApp.getMessage(res.data) ?? "Có lỗi. Vui lòng thử lại!";
+                                    window.cmsHattApp.showError({message:message});
+                                }
+                            }).catch((err) => {
+                                window.cmsHattApp.showError(err);
+                            });
+                        }
+                    }
+                })
+                me.onSubmit = false;
+
+
+            }
+        },
+
+
     }
 </script>
 

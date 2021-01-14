@@ -13,8 +13,16 @@ window.appConfig = {
             url: baseUrl + '/agency/refresh_token',
             method: "POST",
         },
+        changePassword: {
+            url: baseUrl + '/private/change-pass',
+            method: "POST",
+        },
         listCity: {
             url: baseUrl + '/private/list-city',
+            method: "POST",
+        },
+        listDistrict: {
+            url: baseUrl + '/private/list-district',
             method: "POST",
         },
         listWard: {
@@ -33,13 +41,22 @@ window.appConfig = {
             url: baseUrl + '/private/get-partners',
             method: "GET",
         },
-        addPartners: {
-            url: baseUrl + '/private/add-partners',
+        addPartner: {
+            url: baseUrl + '/private/add-partner',
             method: "POST",
         },
         //Thông tin giới thiệu
         getIntroducers: {
             url: baseUrl + '/private/get-introducers',
+            method: "GET",
+        },
+
+        confirmIntroducer: {
+            url: baseUrl + '/private/confirm-introducer',
+            method: "POST",
+        },
+        getConfirmMessage: {
+            url: baseUrl + '/private/get-confirm-message',
             method: "GET",
         },
         deleteIntroducer: {
@@ -69,8 +86,12 @@ window.appConfig = {
             method: "POST",
         },
 
+        getBankAccount: {
+            url: baseUrl + '/private/get-bank-account',
+            method: "GET",
+        },
         updateBankAccount: {
-            url: baseUrl + '/private/update-work-venue',
+            url: baseUrl + '/private/update-bank-account',
             method: "POST",
         },
         getQuantity: {
@@ -85,12 +106,16 @@ window.appConfig = {
             url: baseUrl + '/private/get-quantity2',
             method: "GET",
         },
+        getUnreadNotice: {
+            url: baseUrl + '/private/get-unread-notice',
+            method: "POST",
+        },
         getNotices: {
             url: baseUrl + '/private/get-notices',
             method: "GET",
         },
-        viewNotice: {
-            url: baseUrl + '/private/view-notice',
+        updateNotice: {
+            url: baseUrl + '/private/update-notice',
             method: "POST",
         },
         removeNotice: {
@@ -101,10 +126,30 @@ window.appConfig = {
             url: baseUrl + '/private/feedback',
             method: "POST",
         },
+        reportChartTotal: {
+            url: baseUrl + '/private/report-chart-total',
+            method: "POST",
+        },
+        reportChart: {
+            url: baseUrl + '/private/report-chart',
+            method: "POST",
+        },
+        reportList: {
+            url: baseUrl + '/private/report-list',
+            method: "POST",
+        },
 
     },
     messages:{
+        SUCCESS :"Thay đổi thành công!",
         INVALID_USERNAME_PASSWORD :"Sai thông tin. Vui lòng kiểm tra lại!",
-        INVALID_SESSION:"Vui lòng đăng nhập lại!"
+        INVALID_SESSION:"Vui lòng đăng nhập lại!",
+        TRIAL_CODE_NOT_FOUND:"Không tìm thấy code",
+        TRIAL_CODE_ALREADY_EXIST:"Code đã tồn tại. Vui lòng thử lại!",
+        CREATE_TRIAL_CODE_FAIL:"Tạo code ko thành công. Vui lòng thử lại!",
+        PARTNER_NOT_FOUND:'Tạo đối tác ko thành công. Vui lòng thử lại!',
+        PARTNER_ALREADY_ADDED:"Đối tác đã tồn tại. Vui lòng thử lại!",
+        INTRODUCER_NOT_FOUND:"Không tìm thấy thông tin người giới thiệu. Vui lòng thử lại!"
+
     }
 };

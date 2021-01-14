@@ -3,10 +3,32 @@ import App from './App.vue'
 import {store} from "./store";
 import {router} from "@/route";
 require("./init.js");
+window.axios.interceptors.response.use(function (response) {
+  return response;
+}, function (error) {
+  const status = error.response ? error.response.status : null;
 
+  if (status === 401) {
+    store.dispatch('user/refreshToken').then(()=>{
+      return window.axios.request(error.config);
+    }).catch((err) =>{
+      window.cmsHattApp.showError(err)
+    });
+
+  }
+
+  // Any status codes that falls outside the range of 2xx cause this function to trigger
+  // Do something with response error
+  return Promise.reject(error);
+});
 
 Vue.component('ht-header',require('./components/Layouts/Header').default);
 Vue.component('ht-footer',require('./components/Layouts/Footer').default);
+Vue.component('ht-pie-chart',require('./components/Layouts/PieChart').default);
+
+
+
+
 
 new Vue({
   store,

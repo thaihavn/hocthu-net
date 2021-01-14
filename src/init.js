@@ -3,6 +3,8 @@ window._ = require('lodash');
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css'
 import '@fortawesome/fontawesome-free/js/all.min'
+import 'daterangepicker/daterangepicker.css';
+
 
 window.Popper = require('popper.js').default;
 window.$ = window.jQuery = require('jquery');
@@ -20,9 +22,24 @@ window.daterangepicker = require('daterangepicker');
 window.bootbox = require('bootbox');
 require("./config");
 window.cmsHattApp = {
-    getMessage(status){
+    makeCapCha(length){
+        var result           = '';
+        var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        var charactersLength = characters.length;
+        for ( var i = 0; i < length; i++ ) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    },
+    getMessage(res){
         var messages = window.appConfig.messages;
-        return window._.get(messages, status);
+        var message = 'Có lỗi. Vui lòng thử lại!';
+        if(typeof res.message !='undefined'){
+            message = res.message
+        }else if(typeof res.status !='undefined'){
+            message = window._.get(messages, res.status);
+        }
+        return message;
     },
     showSuccess: function (configs) {
         var args = {};
@@ -93,5 +110,23 @@ window.cmsHattApp = {
         };
         args.centerVertical = true;
         window.bootbox.confirm(args);
+    },
+    showPrompt:function(configs){
+        var args = {};
+        if (typeof configs == 'object') {
+            args = configs;
+        }
+        args.buttons = {
+            confirm: {
+                label: '<i class="fa fa-check"></i> Gửi',
+            },
+            cancel: {
+                label: '<i class="fa fa-times"></i> Cancel',
+            }
+        };
+        args.centerVertical = true;
+        window.bootbox.prompt(args);
+
     }
 };
+

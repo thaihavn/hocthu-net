@@ -1,5 +1,6 @@
 <template>
     <div class="container ">
+
         <div class="row align-items-center justify-content-center my-5">
             <div class="col-12">
                 <h3 class="text-center">Thông Tin</h3>
@@ -7,36 +8,32 @@
             <div class="col-12 col-lg-8">
                 <ul class="nav nav-pills nav-fill">
                     <li class="nav-item">
-                        <router-link :to="{name:'profile'}" >Cá nhân <i class="fas fa-pencil-alt"></i></router-link>
+                        <router-link :to="{name:'profile'}" class="nav-link btn-outline-success active" >Cá nhân <i class="fas fa-pencil-alt"></i></router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link :to="{name:'user_bank'}" class="nav-link btn-outline-success active">Tài khoản <i class="fas fa-pencil-alt"></i></router-link>
+                        <router-link :to="{name:'user_bank'}">Tài khoản <i class="fas fa-pencil-alt"></i></router-link>
                     </li>
                 </ul>
                 <div class="bank-information-form my-3">
-                    <form v-on:submit="updateBankAccount($event)">
+                    <form v-on:submit="changePassword($event)">
                         <div class="form-group">
-                            <label  class="font-weight-bold">Số tài khoản:</label>
-                            <input type="text" v-model="form.accountNumber"  class="form-control" placeholder="0011000xxxxxxx">
+                            <label  class="font-weight-bold">Mật khẩu cũ:</label>
+                            <input type="password"  v-model="form.currentPassword" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label  class="font-weight-bold">Tên chủ tài khoản:</label>
-                            <input type="text" v-model="form.owner"  class="form-control" placeholder="Nguyễn Văn A">
+                            <label  class="font-weight-bold">Mật khẩu mới:</label>
+                            <input type="password" v-model="form.newPassword" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label class="font-weight-bold">Ngân hàng:</label>
-                            <select v-model="form.idBank" class="form-control" id="bank">
-                                <option v-for="bank in banks" :key="bank.id" :value="bank.id">{{bank.name}}</option>
-                            </select>
+                            <label  class="font-weight-bold">Xác nhận mật khẩu mới:</label>
+                            <input type="password" v-model="form.confirmPassword"  class="form-control">
                         </div>
                         <div class="form-group ">
                             <div class="btn-group btn-block" role="group" aria-label="Basic example">
                                 <button type="submit" class="btn btn-success">Cập nhật</button>
                                 <router-link :to="{name:'profile'}"  class="btn btn-danger" >Bỏ qua</router-link>
-
                             </div>
                         </div>
-
                     </form>
                 </div>
             </div>
@@ -46,41 +43,29 @@
 
 <script>
     export default {
-        name: "Bank",
+        name: "Password",
         data:function (){
             return {
                 form:{
-                    accountNumber: null,
-                    owner: "",
-                    idBank:null
+                    currentPassword:"",
+                    newPassword: "",
+                    confirmPassword: ""
                 },
                 errors: [],
                 onSubmit: false,
             }
         },
-        created() {
-            this.getBankAccount();
-            var banks =this.$store.state.user.banks;
-            if(banks == null){
-                this.$store.dispatch('user/getListBank');
-            }
-        },
-        computed: {
-            banks() {
-                return this.$store.state.user.banks;
-            }
-        },
         methods: {
             validationForm(){
                 this.errors=[];
-                if(!this.form.accountNumber){
-                    this.errors.push('Bạn chưa nhập Số tài khoản!');
+                if(!this.form.currentPassword){
+                    this.errors.push('Bạn chưa nhập password cũ!');
                 }
-                if(!this.form.owner){
-                    this.errors.push('Bạn chưa nhập Tên tài khoản:!');
+                if(!this.form.newPassword){
+                    this.errors.push('Bạn chưa nhập password mới!');
                 }
-                if(!this.form.idBank){
-                    this.errors.push('Bạn chưa nhập Ngân hàng:!');
+                if(!this.form.confirmPassword){
+                    this.errors.push('Bạn chưa nhập lại password mới!');
                 }
                 if(this.errors.length > 0){
                     window.cmsHattApp.showError({
@@ -91,7 +76,7 @@
                     return true;
                 }
             },
-            updateBankAccount(e) {
+            changePassword(e) {
                 e.preventDefault();
                 var me = this;
                 if (this.onSubmit) {
@@ -105,11 +90,12 @@
                     message: "Bạn chắc chắn muốn thay đổi?",
                     callback: function (result) {
                         if (result) {
-                            me.$store.dispatch('user/updateBankAccount',me.form).then((res) => {
+                            me.$store.dispatch('user/changePassword',me.form).then((res) => {
                                 var message = '';
                                 if (res.data.status == "SUCCESS") {
                                     message = window.cmsHattApp.getMessage(res.data) ?? "Cập nhật thông tin thành công!";
                                     window.cmsHattApp.showSuccess({message:message});
+                                    me.$router.push({name:'profile'})
                                 }else{
                                     message = window.cmsHattApp.getMessage(res.data) ?? "Có lỗi. Vui lòng thử lại!";
                                     window.cmsHattApp.showError({message:message});
@@ -119,23 +105,11 @@
                             });
                         }
                     }
-                })
-                this.onSubmit = false;
-            },
-            getBankAccount(){
-                var me = this;
-                var api = window.appConfig.api.getBankAccount;
-                window.axios({
-                    method: api.method,
-                    url: api.url,
-                }).then((response) => {
-                    var res = response.data;
-                    if (res.status == "SUCCESS" && res.response!=null) {
-                       me.form = res.response;
-                    }
                 });
+                this.onSubmit = false;
             }
         },
+
     }
 </script>
 

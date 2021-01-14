@@ -21,11 +21,11 @@
                                 <label  class="font-weight-bold">Mật khẩu:</label>
                                 <input type="password" v-model="form.password"  class="form-control" placeholder="Mật khẩu">
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" v-if="login_fail>=3">
                                 <label  class="font-weight-bold">Mã xác nhận:</label>
                                 <div class="input-group">
-                                    <input type="text" v-model="code" class="form-control " placeholder="Mã xác nhận">
-                                    <input type="text" class="form-control disabled" disabled readonly placeholder="XZGR3">
+                                    <input type="text" v-model="reCapchaLogin" class="form-control " placeholder="Mã xác nhận">
+                                    <input type="text" class="form-control disabled" disabled readonly :placeholder="capchaLogin">
                                 </div>
                             </div>
                             <div class="form-group ">
@@ -54,13 +54,13 @@
                             <div class="form-group">
                                 <label  class="font-weight-bold">Mã xác nhận:</label>
                                 <div class="input-group">
-                                    <input type="text" v-model="code" class="form-control " placeholder="Mã xác nhận">
-                                    <input type="text" class="form-control disabled" disabled readonly placeholder="XZGR3">
+                                    <input type="text" v-model="reCapchaRegister" class="form-control " placeholder="Mã xác nhận">
+                                    <input type="text" class="form-control disabled" disabled readonly :placeholder="capchaRegister">
                                 </div>
                             </div>
                             <div class="form-group ">
                                 <div class="btn-group btn-block" role="group" aria-label="Basic example">
-                                    <button type="submit" class="btn btn-success">Đăng nhập</button>
+                                    <button type="submit" class="btn btn-success">Đăng ký</button>
                                     <button @click="resetForm($event)" class="btn btn-danger">Bỏ qua</button>
                                 </div>
                             </div>
@@ -78,24 +78,28 @@
     export default {
         data:function (){
             return {
-                form:{phone: "0987654321",
+                form:{phone: "",
                     fullName: "",
                     email: "",
-                    password: "0987654321",},
+                    password: "",},
                 form_default:{
-                    phone: "0987654321",
+                    phone: "",
                     fullName: "",
                     email: "",
-                    password: "0987654321",
+                    password: "",
                 },
-                code:"",
                 action:'login',
                 errors: [],
                 onSubmit: false,
+                login_fail :0,
+                reCapchaLogin:"",
+                capchaLogin:window.cmsHattApp.makeCapCha(5),
+                reCapchaRegister:"",
+                capchaRegister:window.cmsHattApp.makeCapCha(5)
             }
         },
         methods:{
-            validationForm(){
+            validationForm(form){
                 this.errors=[];
                 if(!this.form.phone){
                     this.errors.push('Bạn chưa nhập số điện thoại!');
@@ -104,9 +108,32 @@
                     this.errors.push('Bạn chưa nhập password!');
 
                 }
+
+                if(this.login_fail >=3 && form =='login'){
+                    if(this.reCapchaLogin.toUpperCase() !== this.capchaLogin.toUpperCase()){
+                        this.errors.push('Vui lòng nhập capcha chính xác!');
+                    }
+                }
+
+
+                if(form =='register'){
+                    if(this.reCapchaRegister.toUpperCase() !== this.capchaRegister.toUpperCase()){
+                        this.errors.push('Vui lòng nhập capcha chính xác!');
+                    }
+
+                    if(!this.form.email){
+                        this.errors.push('Bạn chưa nhập email!');
+                    }
+                    if(!this.form.fullName){
+                        this.errors.push('Bạn chưa nhập họ và tên!');
+
+                    }
+                }
+
+
                 if(this.errors.length > 0){
                     window.cmsHattApp.showError({
-                        message: this.errors.join('\n'),
+                        message: this.errors.join('<br>'),
                     });
                     return false;
                 }else{
@@ -126,39 +153,12 @@
                     return false;
                 }
                 this.onSubmit = true;
-                var api = window.appConfig.api.token;
-                var data = {
-                    'grant_type' : 'client_credentials',
-                    'scope' : 'dpa',
-                };
-                window.axios({
-                    method: api.method,
-                    url: api.url,
-                    data: data,
-                    headers:{
-                        'Authorization' : "Basic " + btoa(this.form.phone + ":" + this.form.password),
-                    }
-                }).then((response) => {
-                    var res = response.data;
-                    if (res.status == "SUCCESS"){
-                        var token = JSON.parse(res.response);
-                        this.$store.dispatch('user/login',token)
-                    } else {
-                        var message = window.cmsHattApp.getMessage(res.status)??"Có lỗi khi đăng nhập. Vui lòng thử lại!";
-                        window.cmsHattApp.showError({
-                            message: message,
-                            callback: function () {
-                                // router.push({'name': "content_manager", 'param': {'type': this.content_type}})
-                            }
-                        });
-                    }
-                }).catch((err) => {
-                    window.cmsHattApp.showError({
-                        message: err.message,
-                        callback: function () {
-                            // router.push({'name': "content_manager", 'param': {'type': this.content_type}})
-                        }
-                    });
+                this.$store.dispatch('user/login',this.form).then(()=>{
+                    this.$store.dispatch('user/getNotifyUnread');
+                    this.$router.push({name:"report_chart"})
+                }).catch((err)=>{
+                    this.login_fail++;
+                    window.cmsHattApp.showError({message: err.message});
                 });
                 this.onSubmit = false;
             },
@@ -182,21 +182,10 @@
                     if (res.status == 1) {
                         this.form = res.data;
                     } else {
-                        window.cmsHattApp.showError({
-                            message: res.message,
-                            callback: function () {
-                                // router.push({'name': "content_manager", 'param': {'type': this.content_type}})
-                            }
-                        });
+                        window.cmsHattApp.showError({message: res.message});
                     }
                 }).catch((err) => {
-                    window.cmsHattApp.showError({
-                        message: err.message,
-                        callback: function () {
-                            // router.push({'name': "content_manager", 'param': {'type': this.content_type}})
-                        }
-                    });
-
+                    window.cmsHattApp.showError({message: err.message});
                 });
                 this.onSubmit = false;
 
