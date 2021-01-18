@@ -21,6 +21,12 @@
                     <h4 class="text-center">Tổng sản lượng</h4>
                     <ht-pie-chart :chartdata="chartsTotalData" :options="options" class="mb-5"></ht-pie-chart>
                 </div>
+
+                <div v-if="rows_revenue.length>0">
+                    <h4 class="text-center">Tổng Doanh thu</h4>
+                    <ht-pie-chart :chartdata="chartsRevenueData" :options="options" class="mb-5"></ht-pie-chart>
+                </div>
+
                 <div v-if="rows.length>0">
                     <div v-for="(chart,index) in chartsData" :key="index" class="mb-5">
                         <h4 class="text-center">{{chart.title}}</h4>
@@ -55,45 +61,47 @@
                     }
                 ],
                 rows: [],
-                rows_default: [
-                    [
-                        {
-                            "trialCode": "HOA02",
-                            "totalQuantity": 1,
-                            "tocalCommission": 0,
-                            "state": "TRIAL"
-                        }
-                    ],
-                    [
-                        {
-                            "trialCode": "HOA01",
-                            "totalQuantity": 2,
-                            "tocalCommission": 537000,
-                            "state": "ACTIVATE"
-                        },
-                        {
-                            "trialCode": "HOA01",
-                            "totalQuantity": 5,
-                            "tocalCommission": 0,
-                            "state": "TRIAL"
-                        }
-                    ]
-                ],
+                rows_default: [[{"reportCode":"HOA02","total":"1","type":"Học thử"}],[{"reportCode":"HOA01","total":"1","type":"Đã mua"},{"reportCode":"HOA01","total":"1","type":"Học thử"}]],
+                rows_revenue: [],
+                rows_revenue_default: [{"reportCode":null,"total":"2403000","type":"Bạn"},{"reportCode":null,"total":"614100","type":"Đối tác"}],
                 charts: [],
                 errors: [],
                 backgroundColor: {
                     TRIAL: "rgba(75, 192, 192, 0.2)",
                     ACTIVATE: 'rgba(153, 102, 255, 0.2)',
-                    PARTNERTS: 'rgba(255, 159, 64, 0.2)'
+                    PARTNERTS: 'rgba(255, 159, 64, 0.2)',
+                    'hocThu': "rgba(75, 192, 192, 0.2)",
+                    'daMua': 'rgba(153, 102, 255, 0.2)',
+                    'doiTac': 'rgba(255, 159, 64, 0.2)'
                 },
                 borderColor: {
                     TRIAL: "rgba(75, 192, 192, 1)",
                     ACTIVATE: 'rgba(153, 102, 255, 1)',
-                    PARTNERTS: 'rgba(255, 159, 64, 1)'
+                    PARTNERTS: 'rgba(255, 159, 64, 1)',
+                    'hocThu': "rgba(75, 192, 192, 1)",
+                    'daMua': 'rgba(153, 102, 255, 1)',
+                    'doiTac': 'rgba(255, 159, 64, 1)',
+
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false
+                    maintainAspectRatio: false,
+                    tooltips: {
+                        callbacks: {
+                            label: function(tooltipItem, data) {
+                                var index = tooltipItem.datasetIndex;
+                                var number = data.datasets[index].data[index];
+                                var label = data.labels[index] || '';
+
+                                if (label) {
+                                    label += ': ';
+                                }
+                                number = window.cmsHattApp.formatNumber(number);
+                                label+= number || '';
+                                return label;
+                            }
+                        }
+                    }
                 },
                 onSubmit: false,
             }
@@ -114,12 +122,41 @@
                     borderWidth: '1px'
                 }
                 this.rows_total.forEach(function (item) {
-                    data.labels.push(me.typeText(item.state));
-                    dataItem.backgroundColor.push(window._.get(me.backgroundColor, item.state));
-                    dataItem.borderColor.push(window._.get(me.borderColor, item.state));
-                    dataItem.label = me.typeText(item.state);
-                    dataItem.data.push(item.totalQuantity);
-                    dataItem.label = me.typeText(item.state);
+                    var string = item.type.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+                    data.labels.push(item.type);
+                    dataItem.backgroundColor.push(window._.get(me.backgroundColor, window._.camelCase(string)));
+                    dataItem.borderColor.push(window._.get(me.borderColor, window._.camelCase(string)));
+                    dataItem.label = item.type;
+                    dataItem.data.push(item.total);
+                    dataItem.label = me.typeText(item.type);
+                });
+                data.datasets.push(dataItem);
+
+                return data;
+            },
+            chartsRevenueData() {
+                var me = this;
+                var data = {
+                    labels: [],
+                    datasets: [],
+                    title: ""
+                };
+                var dataItem = {
+                    label: 'Data One',
+                    backgroundColor: [],
+                    borderColor: [],
+                    data: [],
+                    borderWidth: '1px'
+                }
+                this.rows_revenue.forEach(function (item) {
+                    var string = item.type.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                    data.labels.push(item.type);
+                    dataItem.backgroundColor.push(window._.get(me.backgroundColor, window._.camelCase(string)));
+                    dataItem.borderColor.push(window._.get(me.borderColor, window._.camelCase(string)));
+                    dataItem.label = item.type;
+                    dataItem.data.push(item.total);
+                    dataItem.label = me.typeText(item.type);
                 });
                 data.datasets.push(dataItem);
 
@@ -142,12 +179,13 @@
                         borderWidth: '1px'
                     }
                     item.forEach(function (child) {
-                        data.title = "Mã " + child.trialCode;
-                        data.labels.push(me.typeText(child.state));
-                        dataItem.backgroundColor.push(window._.get(me.backgroundColor, child.state));
-                        dataItem.borderColor.push(window._.get(me.borderColor, child.state));
-                        dataItem.label = child.trialCode;
-                        dataItem.data.push(child.totalQuantity)
+                        var string = child.type.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                        data.title = "Mã " + child.reportCode;
+                        data.labels.push(child.type);
+                        dataItem.backgroundColor.push(window._.get(me.backgroundColor, window._.camelCase(string)));
+                        dataItem.borderColor.push(window._.get(me.borderColor, window._.camelCase(string)));
+                        dataItem.label = child.reportCode;
+                        dataItem.data.push(child.total)
                     })
                     data.datasets.push(dataItem);
                     chartData.push(data);
@@ -156,8 +194,7 @@
             }
         },
         created() {
-            // this.rows = this.rows_default;
-            // this.rows_total = this.rows_total_default;
+
             this.fetchData();
         },
         methods: {
@@ -200,9 +237,24 @@
                 }).catch((err) => {
                     window.cmsHattApp.showError(err);
                 });
+                var apiRevenue = window.appConfig.api.reportChartRevenue;
+                window.axios({
+                    method: apiRevenue.method,
+                    url: apiRevenue.url,
+                    data: {},
+                    headers: {
+                        'Content-type': 'application/json',
+                    }
+                }).then((res) => {
+                    if (res.data.status == "SUCCESS") {
+                        me.rows_revenue = res.data.response;
+                    }
+                }).catch((err) => {
+                    window.cmsHattApp.showError(err);
+                });
 
 
-                var api = window.appConfig.api.reportChart;
+                var api = window.appConfig.api.reportChartCode;
                 window.axios({
                     method: api.method,
                     url: api.url,

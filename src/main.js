@@ -9,6 +9,13 @@ window.axios.interceptors.response.use(function (response) {
   const status = error.response ? error.response.status : null;
 
   if (status === 401) {
+    var refresh_count = store.getters['user/refreshCount'];
+    refresh_count = refresh_count+1;
+    store.dispatch('user/updateRefreshCount',refresh_count);
+    if(refresh_count>3){
+      store.dispatch('user/logout');
+      router.push({name:"login"});
+    }
     store.dispatch('user/refreshToken').then(()=>{
       return window.axios.request(error.config);
     }).catch((err) =>{

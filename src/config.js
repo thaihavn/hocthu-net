@@ -60,7 +60,7 @@ window.appConfig = {
             method: "GET",
         },
         deleteIntroducer: {
-            url: baseUrl + '/private/remove-introducers',
+            url: baseUrl + '/private/remove-introducer',
             method: "DELETE",
         },
         updateSource: {
@@ -126,12 +126,16 @@ window.appConfig = {
             url: baseUrl + '/private/feedback',
             method: "POST",
         },
+        reportChartRevenue: {
+            url: baseUrl + '/private//report-chart-revenue',
+            method: "POST",
+        },
         reportChartTotal: {
             url: baseUrl + '/private/report-chart-total',
             method: "POST",
         },
-        reportChart: {
-            url: baseUrl + '/private/report-chart',
+        reportChartCode: {
+            url: baseUrl + '/private/report-chart-code',
             method: "POST",
         },
         reportList: {
@@ -149,7 +153,9 @@ window.appConfig = {
         CREATE_TRIAL_CODE_FAIL:"Tạo code ko thành công. Vui lòng thử lại!",
         PARTNER_NOT_FOUND:'Tạo đối tác ko thành công. Vui lòng thử lại!',
         PARTNER_ALREADY_ADDED:"Đối tác đã tồn tại. Vui lòng thử lại!",
-        INTRODUCER_NOT_FOUND:"Không tìm thấy thông tin người giới thiệu. Vui lòng thử lại!"
+        INTRODUCER_NOT_FOUND:"Không tìm thấy thông tin người giới thiệu. Vui lòng thử lại!",
+        DATE_NOT_VALID:"Ngày không hợp lệ, ngày có dịnh dạng DD-MM-YYYY!",
+
 
     }
 };

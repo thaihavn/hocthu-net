@@ -204,7 +204,6 @@
                 })
             },
             confirmIntroducer(row){
-                var getSource = false;
                 var me = this;
                 if (me.onSubmit) {
                     return false;
@@ -227,10 +226,10 @@
                                     }
                                 }).then((res) => {
                                     if (res.data.status == "SUCCESS") {
-                                        getSource= true;
-                                    message = window.cmsHattApp.getMessage(res.data);
-                                    window.cmsHattApp.showSuccess({message:message});
-                                }else{
+                                        message = window.cmsHattApp.getMessage(res.data);
+                                        window.cmsHattApp.showSuccess({message:message});
+                                        me.getIntroducers();
+                                    }else{
                                     message = window.cmsHattApp.getMessage(res.data) ?? "Có lỗi. Vui lòng thử lại!";
                                         window.cmsHattApp.showError({message: message});
                                     }
@@ -239,11 +238,10 @@
                                 });
                             }
                         }
-                    })
+                    });
+
                 })
-                if(getSource){
-                    me.getSource()
-                }
+
                 me.onSubmit = false;
             },
             deleteIntroducer(row){
@@ -267,7 +265,7 @@
                             }).then((res) => {
                                 var message = '';
                                 if (res.data.status == "SUCCESS") {
-                                    this.getIntroducers();
+                                    me.getIntroducers();
                                     message = window.cmsHattApp.getMessage(res.data) ?? "Xóa người giới thiệu thành công!";
                                     window.cmsHattApp.showSuccess({message: message});
                                 }else{

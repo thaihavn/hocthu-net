@@ -1,4 +1,8 @@
+var PACKAGE = require('./package.json');
+var path = PACKAGE.name + '/' + PACKAGE.version;
+console.log(path);
 module.exports = {
+    assetsDir:path,
     configureWebpack: {
         plugins: [
         ]

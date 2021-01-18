@@ -3,7 +3,7 @@
         <router-link class="text-muted" :to="{name:'report_chart'}"><i class="fas fa-home"></i> Home</router-link>
         <router-link class="text-muted" :to="{name:'code'}"><i class="fas fa-users"></i> Đại lý</router-link>
         <router-link class="text-muted" :to="{name:'profile'}"><i class="fas fa-pencil-alt"></i> Hồ sơ</router-link>
-        <router-link class="text-muted" :to="{name:'notify'}"><i class="fa fa-fw fa-envelope"></i><sup>{{this.$store.state.user.notify_unread}}</sup></router-link>
+        <router-link class="text-muted" :to="{name:'notify'}"><i class="fa fa-fw fa-envelope"></i><sup v-if="notifyCount">{{notifyCount}}</sup></router-link>
     </div>
 
 </template>
@@ -11,6 +11,11 @@
 <script>
     export default {
         name: "Footer",
+        data() {
+            return {
+                notifyCount: this.$store.state.user.notify_unread
+            }
+        },
     }
 </script>
 

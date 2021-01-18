@@ -18,15 +18,15 @@
                     <form v-on:submit="changePassword($event)">
                         <div class="form-group">
                             <label  class="font-weight-bold">Mật khẩu cũ:</label>
-                            <input type="password"  v-model="form.currentPassword" class="form-control">
+                            <input type="password"  v-model="form.currentPassword" class="form-control" autocorrect="off" autocapitalize="none" autocomplete="off">
                         </div>
                         <div class="form-group">
                             <label  class="font-weight-bold">Mật khẩu mới:</label>
-                            <input type="password" v-model="form.newPassword" class="form-control">
+                            <input type="password" v-model="form.newPassword" class="form-control" autocorrect="off" autocapitalize="none" autocomplete="off">
                         </div>
                         <div class="form-group">
                             <label  class="font-weight-bold">Xác nhận mật khẩu mới:</label>
-                            <input type="password" v-model="form.confirmPassword"  class="form-control">
+                            <input type="password" v-model="form.confirmPassword"  class="form-control" autocorrect="off" autocapitalize="none" autocomplete="off">
                         </div>
                         <div class="form-group ">
                             <div class="btn-group btn-block" role="group" aria-label="Basic example">

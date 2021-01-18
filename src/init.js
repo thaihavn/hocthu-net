@@ -22,6 +22,9 @@ window.daterangepicker = require('daterangepicker');
 window.bootbox = require('bootbox');
 require("./config");
 window.cmsHattApp = {
+    formatNumber(number){
+        return  new Intl.NumberFormat('vi-VN', { maximumSignificantDigits: 3 }).format(number);
+    },
     makeCapCha(length){
         var result           = '';
         var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';

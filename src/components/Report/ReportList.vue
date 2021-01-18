@@ -28,7 +28,7 @@
                     <div class="form-row my-2">
                         <div class="col text-center">
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="daMua" name="daMua" v-model="form.state" :value="1">
+                                <input type="checkbox" class="custom-control-input" id="daMua" name="daMua" v-model="form.type" :value="1">
                                 <label class="custom-control-label" for="daMua">Đã mua</label>
                             </div>
                         </div>
@@ -47,7 +47,7 @@
                     <table class="table table-striped table-hover">
                         <thead class="thead-inverse">
                         <tr>
-                            <th>Điện thoại</th>
+                            <th>Điện thoại</th>`
                             <th>Giá</th>
                             <th>Ngày</th>
                             <th>Loại</th>
@@ -157,14 +157,14 @@
                     }
                 ],
                 form: {
-                    date1: "",
-                    date2: "",
-                    state: "0"
+                    date1: null,
+                    date2: null,
+                    type: "0"
                 },
                 form_default: {
-                    date1: "",
-                    date2: "",
-                    state: "0"
+                    date1: null,
+                    date2: null,
+                    type: "0"
                 },
                 errors: [],
                 onSubmit: false,
@@ -262,16 +262,16 @@
                 }
                 this.onSubmit = true;
                 var api = window.appConfig.api.reportList;
-                if (this.form.state) {
-                    this.form.state = "1"
+                if (this.form.type) {
+                    this.form.type = "1"
                 } else {
-                    this.form.state = "0"
+                    this.form.type = "0"
                 }
+
                 window.axios({
                     method: api.method,
                     url: api.url,
-                    params: this.form,
-                    data: {},
+                    data: this.form,
                     headers: {
                         'Content-type': 'application/json',
                     }

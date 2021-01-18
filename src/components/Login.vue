@@ -15,11 +15,11 @@
                         <form action="#" id="form-login" v-on:submit="login($event)">
                             <div class="form-group">
                                 <label  class="font-weight-bold">Số điện thoại:</label>
-                                <input type="text" v-model="form.phone"  class="form-control" placeholder="Số điện thoại">
+                                <input type="text" v-model="form.phone"  class="form-control" placeholder="Số điện thoại"  autocorrect="off" autocapitalize="none" autocomplete="off">
                             </div>
                             <div class="form-group">
                                 <label  class="font-weight-bold">Mật khẩu:</label>
-                                <input type="password" v-model="form.password"  class="form-control" placeholder="Mật khẩu">
+                                <input type="password" v-model="form.password"  class="form-control" placeholder="Mật khẩu"  autocorrect="off" autocapitalize="none" autocomplete="off">
                             </div>
                             <div class="form-group" v-if="login_fail>=3">
                                 <label  class="font-weight-bold">Mã xác nhận:</label>
@@ -37,24 +37,24 @@
                         <form action="#" v-on:submit="register($event)">
                             <div class="form-group">
                                 <label  class="font-weight-bold">Số điện thoại:</label>
-                                <input type="text" v-model="form.phone"  class="form-control" placeholder="Số điện thoại">
+                                <input type="text" v-model="form.phone"  class="form-control" placeholder="Số điện thoại" autocorrect="off" autocapitalize="none" autocomplete="off">
                             </div>
                             <div class="form-group">
                                 <label  class="font-weight-bold">Họ và tên:</label>
-                                <input type="text" v-model="form.fullName"  class="form-control" placeholder="">
+                                <input type="text" v-model="form.fullName"  class="form-control" placeholder="" autocorrect="off" autocapitalize="none" autocomplete="off">
                             </div>
                             <div class="form-group">
                                 <label  class="font-weight-bold">Email:</label>
-                                <input type="email" v-model="form.email"  class="form-control" placeholder="">
+                                <input type="email" v-model="form.email"  class="form-control" placeholder="" autocorrect="off" autocapitalize="none" autocomplete="off">
                             </div>
                             <div class="form-group">
                                 <label  class="font-weight-bold">Mật khẩu:</label>
-                                <input type="password" v-model="form.password"  class="form-control" placeholder="Mật khẩu">
+                                <input type="password" v-model="form.password"  class="form-control" placeholder="Mật khẩu" autocorrect="off" autocapitalize="none" autocomplete="off">
                             </div>
                             <div class="form-group">
                                 <label  class="font-weight-bold">Mã xác nhận:</label>
                                 <div class="input-group">
-                                    <input type="text" v-model="reCapchaRegister" class="form-control " placeholder="Mã xác nhận">
+                                    <input type="text" v-model="reCapchaRegister" class="form-control " placeholder="Mã xác nhận" autocorrect="off" autocapitalize="none" autocomplete="off">
                                     <input type="text" class="form-control disabled" disabled readonly :placeholder="capchaRegister">
                                 </div>
                             </div>

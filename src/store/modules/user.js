@@ -10,10 +10,14 @@ export default {
         ward: null,
         isLogin: false,
         notify_unread: 0,
+        refresh_count:0
     }),// go day la function cho nen no cu goi lai lien tuc thi phai
     getters: {
         isLogin: (state) => {
             return state.isLogin;
+        },
+        refreshCount: (state) => {
+            return state.refresh_count;
         },
     },
     mutations: {
@@ -54,6 +58,10 @@ export default {
         },
         updateWard(state, rows) {
             state.ward = rows;
+        },
+        updateRefreshCount(state,count){
+            console.log(count);
+            state.refresh_count = count;
         }
     },
     actions: {
@@ -193,11 +201,11 @@ export default {
             commit('logoutUser')
         },
         refreshToken({commit,state}){
+
             return new Promise((resolve, reject) => {
                 var api = window.appConfig.api.refreshToken;
                 var userPass = state.baseUserPass;
                 var userData = {
-
                 };
                 window.axios({
                     method: api.method,
@@ -206,9 +214,10 @@ export default {
                     headers: {
                         'Authorization': "Basic " + userPass,
                     }
-                }).then((res) => {
-                    if (res.data.status == "SUCCESS") {
-                        userData.token = res.data.response;
+                }).then((response) => {
+                    var res = response.data;
+                    if (res.status == "SUCCESS") {
+                        userData.token = JSON.parse(res.response);
                         commit('updateUser', userData);
                         resolve(res);
                     } else {
@@ -219,7 +228,6 @@ export default {
                     reject(err)
                 });
             })
-
         },
         getListBank({commit}) {
             var api = window.appConfig.api.listBank;
@@ -295,6 +303,9 @@ export default {
                 }).catch(() => {
                 });
             }
+        },
+        updateRefreshCount({commit},count){
+            commit('updateRefreshCount',count);
         }
     },
 

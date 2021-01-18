@@ -16,19 +16,13 @@
                 </ul>
                 <div class="information my-3 " v-show="user">
                     <p>
-                        <b>Số điện thoại:</b>
-                        <br>
-                        {{user.phone}}
+                        <b>Số điện thoại:</b> {{user.phone}}
                     </p>
                     <p>
-                        <b>Họ và Tên:</b>
-                        <br>
-                        {{user.fullName}}
+                        <b>Họ và Tên:</b> {{user.fullName}}
                     </p>
                     <p>
-                        <b>Email:</b>
-                        <br>
-                        {{user.email}}
+                        <b>Email:</b> {{user.email}}
                     </p>
                     <p>
                         <router-link :to="{name:'change_password'}">Đổi mật khẩu</router-link>
@@ -61,7 +55,7 @@
                             <div class="form-group ">
                                 <div class="btn-group btn-block" role="group" aria-label="Basic example">
                                     <button type="submit" class="btn btn-success">Cập nhật</button>
-<!--                                    <button type="reset" class="btn btn-danger">Bỏ qua</button>-->
+                                    <router-link :to="{name:'report_chart'}"  class="btn btn-danger" >Bỏ qua</router-link>
                                 </div>
                             </div>
                         </form>
