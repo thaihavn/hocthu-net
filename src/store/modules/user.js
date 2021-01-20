@@ -112,7 +112,7 @@ export default {
                             resolve(res);
                         } else {
                             var message = window.cmsHattApp.getMessage(res.data);
-                            reject({message: message})
+                            resolve({message: message})
                         }
                     }).catch((err) => {
                         reject(err)
@@ -146,7 +146,6 @@ export default {
                                 resolve(response);
                             }
                         );
-
                     } else {
                         var message = window.cmsHattApp.getMessage(res) ?? "Có lỗi khi đăng nhập. Vui lòng thử lại!";
                         reject({message: message});
@@ -159,17 +158,21 @@ export default {
         },
         changePassword(context,form){
             return new Promise((resolve, reject) => {
+                // var userPass = context.state.baseUserPass;
                 var api = window.appConfig.api.changePassword;
                 window.axios({
                     method: api.method,
                     url: api.url,
                     data: form,
+                    // headers: {
+                    //     'Authorization': "Basic " + userPass,
+                    // }
                 }).then((response) => {
                     var res = response.data;
                     if (res.status == "SUCCESS") {
                         resolve(response);
                     } else {
-                        reject(response);
+                        resolve(response);
                     }
                 }).catch((err) => {
                     reject(err)
@@ -189,7 +192,7 @@ export default {
                     if (res.status == "SUCCESS") {
                         resolve(response);
                     } else {
-                        reject(response);
+                        resolve(response);
                     }
                 }).catch((err) => {
                     reject(err)
@@ -222,7 +225,7 @@ export default {
                         resolve(res);
                     } else {
                         // var message = window.cmsHattApp.getMessage(res.data);
-                        reject(res)
+                        resolve(res)
                     }
                 }).catch((err) => {
                     reject(err)

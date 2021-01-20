@@ -2,18 +2,18 @@
     <div class="container ">
         <div class="row align-items-center justify-content-center my-3">
             <div class="col-12">
-                <h3 class="text-center">Đại Lý</h3>
+                <h3 class="text-center">Đại lý</h3>
             </div>
             <div class="col-12 col-lg-8">
                 <ul class="nav nav-pills nav-fill">
                     <li class="nav-item">
-                        <router-link :to="{name:'code'}" class="nav-link btn-outline-success active">Bạn</router-link>
+                        <router-link :to="{name:'code'}" class="nav-link btn-outline-success active">Bạn <i class="far fa-smile"></i></router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link :to="{name:'partner'}" class="nav-link btn-outline-success ">Đối tác</router-link>
+                        <router-link :to="{name:'partner'}" class="nav-link btn-outline-success ">Đối tác <i class="fas fa-hand-holding-usd"></i></router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link :to="{name:'source'}" class="nav-link btn-outline-success">Nguồn</router-link>
+                        <router-link :to="{name:'source'}" class="nav-link btn-outline-success">Kênh <i class="far fa-handshake"></i></router-link>
                     </li>
                 </ul>
                 <div class=" my-3">
@@ -21,11 +21,11 @@
                     <form v-on:submit="addCode($event)">
                         <div class="form-row d-flex align-items-end">
                             <div class="col">
-                                <label class="font-weight-bold">Tài khoản:</label>
+                                <label class="font-weight-bold text-success">Tài khoản:</label>
                                 <input type="text" v-model="form.trialCode" class="form-control" placeholder="Tài khoản">
                             </div>
                             <div class="col">
-                                <label class="font-weight-bold">Mật khẩu:</label>
+                                <label class="font-weight-bold text-success">Mật khẩu:</label>
                                 <input type="text" v-model="form.password" class="form-control" placeholder="123456" readonly>
                             </div>
                             <div class="col">
@@ -36,28 +36,31 @@
                     <hr>
                 </div>
             </div>
-            <div class="table-responsive">
-                <h4 class="text-center">Danh sách mã truy cập</h4><br>
-                <table class="table table-striped table-hover table-sm ">
-                    <thead class="thead-inverse">
-                    <tr>
-                        <th>Mã truy cập</th>
-                        <th>Mật khẩu</th>
-                        <th class="text-center">Hành động</th>
-                    </tr>
-                    </thead>
-                    <tbody >
-                    <tr v-for="code in codes" :key="code.id">
-                        <td scope="row">{{code.trialCode}}</td>
-                        <td >{{code.password}}</td>
-                        <td class="text-right">
-                            <div class="btn-group" role="group" aria-label="Basic example">
-                                <a type="button" @click="removeCode(code)" class="btn btn-danger">Xóa</a>
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+            <div class="col-12">
+                <h4 class="text-center">Danh sách tài khoản</h4>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm text-white">
+                        <thead class="thead-inverse">
+                        <tr class="text-success">
+                            <th>Tài khoản</th>
+                            <th>Mật khẩu</th>
+                            <th width="100px" class="text-center">Xóa</th>
+                        </tr>
+                        </thead>
+                        <tbody >
+                        <tr v-for="code in codes" :key="code.id">
+                            <td scope="row">{{code.trialCode}}</td>
+                            <td >{{code.password}}</td>
+                            <td class="text-center">
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                    <a type="button" @click="removeCode(code)" class=" text-danger"><i class="fas fa-times" style="font-size:24px"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
             </div>
         </div>
     </div>

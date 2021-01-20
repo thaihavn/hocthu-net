@@ -1,61 +1,63 @@
 <template>
     <div class="container ">
 
-        <div class="row align-items-center justify-content-center my-5">
+        <div class="row align-items-center justify-content-center my-3">
             <div class="col-12">
-                <h3 class="text-center">Thông Tin</h3>
+                <h3 class="text-center">Hồ sơ</h3>
             </div>
             <div class="col-12 col-lg-8">
                 <ul class="nav nav-pills nav-fill">
                     <li class="nav-item">
-                        <router-link :to="{name:'profile'}" class="nav-link btn-outline-success active" >Cá nhân <i class="fas fa-pencil-alt"></i></router-link>
+                        <router-link :to="{name:'profile'}" class="nav-link btn-outline-success active" >Cá nhân <i class="fas fa-user"></i></router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link :to="{name:'user_bank'}">Tài khoản <i class="fas fa-pencil-alt"></i></router-link>
+                        <router-link :to="{name:'user_bank'}" class="nav-link btn-outline-success">Tài khoản <i class="far fa-credit-card"></i></router-link>
                     </li>
                 </ul>
+                <hr>
                 <div class="information my-3 " v-show="user">
-                    <p>
-                        <b>Số điện thoại:</b> {{user.phone}}
+                    <p class="text-white-50">
+                        <span class="font-weight-bold text-success">Số điện thoại:</span> {{user.phone}}
                     </p>
-                    <p>
-                        <b>Họ và Tên:</b> {{user.fullName}}
+                    <p class="text-white-50">
+                        <span class="font-weight-bold text-success">Họ và Tên:</span> {{user.fullName}}
                     </p>
-                    <p>
-                        <b>Email:</b> {{user.email}}
+                    <p class="text-white-50">
+                        <span class="font-weight-bold text-success">Email:</span> {{user.email}}
                     </p>
                     <p>
                         <router-link :to="{name:'change_password'}">Đổi mật khẩu</router-link>
-                    <h4 class="text-center mb-4">Nơi làm việc</h4>
                     <hr>
+
                     <div class="information-form my-3">
+                        <h5 class="text-center" >Nơi làm việc  <span style="cursor: pointer" v-bind:class="{'canEdit':canEdit}" @click="toggleEdit()"><i class="fas fa-pencil-alt" style="font-size: 24px" ></i></span></h5>
                         <form v-on:submit="updateProfile($event)">
                             <div class="form-group">
-                                <label  class="font-weight-bold">Thuộc Tỉnh/Thành phố:</label>
-                                <select class="form-control" v-model="user.idCity">
+                                <label  class="font-weight-bold text-success">Thuộc Tỉnh/Thành phố:</label>
+                                <select class="form-control" v-model="user.idCity" :disabled="!canEdit">
                                     <option   v-for="city in listCity" :key="city.id" :value="city.id">{{city.name}}</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label  class="font-weight-bold">Quận Huyện:</label>
-                                <select class="form-control" v-model="user.idDistrict">
+                                <label  class="font-weight-bold text-success">Quận/Huyện:</label>
+                                <select class="form-control" v-model="user.idDistrict" :disabled="!canEdit">
                                     <option   v-for="district in listDistrict" :key="district.id" :value="district.id">{{district.name}}</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label  class="font-weight-bold">Phường/Xã:</label>
-                                <select class="form-control" v-model="user.idWard">
+                                <label  class="font-weight-bold text-success">Phường/Xã:</label>
+                                <select class="form-control" v-model="user.idWard" :disabled="!canEdit">
                                     <option   v-for="ward in listWard" :key="ward.id" :value="ward.id">{{ward.name}}</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label  class="font-weight-bold">Tên trường học, công ty…:</label>
-                                <input type="text" v-model="user.workPlace"  class="form-control" placeholder="">
+                                <label  class="font-weight-bold text-success">Tên trường học, công ty…:</label>
+                                <input type="text" v-model="user.workPlace"  class="form-control" placeholder="" :readonly="!canEdit">
                             </div>
-                            <div class="form-group ">
+                            <div class="form-group" v-show="canEdit">
                                 <div class="btn-group btn-block" role="group" aria-label="Basic example">
                                     <button type="submit" class="btn btn-success">Cập nhật</button>
-                                    <router-link :to="{name:'report_chart'}"  class="btn btn-danger" >Bỏ qua</router-link>
+                                    <div @click="toggleEdit()" class="btn btn-danger" >Bỏ qua</div>
                                 </div>
                             </div>
                         </form>
@@ -73,6 +75,7 @@
             return {
                 user:this.$store.state.user.user,
                 errors: [],
+                canEdit:false,
                 onSubmit: false,
             }
         },
@@ -88,6 +91,9 @@
             }
         },
         created() {
+            if(this.user.idCity  == null&& this.user.idDistrict == null && this.user.idWard == null ){
+                this.canEdit = true
+            }
             var district =this.$store.state.user.district;
             var ward =this.$store.state.user.ward;
             this.$store.dispatch('user/getListCity');
@@ -109,17 +115,22 @@
             },
         },
         methods: {
+            toggleEdit(){
+                var me = this;
+                me.canEdit = !me.canEdit;
+            },
+
             validationForm(){
                 this.errors=[];
                 if(!this.user.idCity){
-                    this.errors.push('Bạn chưa chọn thành phố!');
+                    this.errors.push('Bạn chưa chọn Tỉnh/Thành phố!');
                 }
                 if(!this.user.idDistrict){
-                    this.errors.push('Bạn chưa chọn Tỉnh thành!');
+                    this.errors.push('Bạn chưa chọn Quận/Huyện!');
 
                 }
                 if(!this.user.idWard){
-                    this.errors.push('Bạn chưa chọn Quận huyện!');
+                    this.errors.push('Bạn chưa chọn Phường/Xã!');
 
                 }
                 if(this.errors.length > 0){
@@ -170,6 +181,7 @@
                     }
                 })
                 me.onSubmit = false;
+                me.canEdit = false;
 
 
             }

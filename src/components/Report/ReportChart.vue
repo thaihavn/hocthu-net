@@ -1,37 +1,36 @@
 <template>
-    <div class="container ">
+    <div class="container">
 
-        <div class="row align-items-center justify-content-center my-5">
+        <div class="row align-items-center justify-content-center my-3">
             <div class="col-12">
-                <h3 class="text-center">Thống kê</h3>
+                <h3 class="text-center">Báo cáo</h3>
             </div>
             <div class="col-12 col-lg-8">
                 <ul class="nav nav-pills nav-fill">
                     <li class="nav-item">
-                        <router-link :to="{name:'report_chart'}" class="nav-link btn-outline-success active">Biểu đồ <i class="fas fa-chart-pie"></i></router-link>
+                        <router-link :to="{name:'report_chart'}" class="nav-link btn-outline-success active">Tổng hợp <i class="fas fa-chart-pie"></i></router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link :to="{name:'report_list'}" class="nav-link btn-outline-success ">Danh sách <i class="fas fa-list"></i></router-link>
+                        <router-link :to="{name:'report_list'}" class="nav-link btn-outline-success ">Chi tiết <i class="fas fa-list"></i></router-link>
                     </li>
                 </ul>
                 <hr>
             </div>
-            <div class="col-12 col-lg-8">
-                <div v-if="rows_total.length>0">
-                    <h4 class="text-center">Tổng sản lượng</h4>
-                    <ht-pie-chart :chartdata="chartsTotalData" :options="options" class="mb-5"></ht-pie-chart>
+            <div class="col-12">
+                <div class="row justify-content-center" v-if="rows_total.length>0">
+                    <h4 class="text-center col-12">Tổng sản lượng</h4>
+                    <ht-pie-chart :chartdata="chartsTotalData" :options="options" class="col-lg-6 col-8"></ht-pie-chart>
+                    <div class="col-12"><hr></div>
                 </div>
-
-                <div v-if="rows_revenue.length>0">
-                    <h4 class="text-center">Tổng Doanh thu</h4>
-                    <ht-pie-chart :chartdata="chartsRevenueData" :options="options" class="mb-5"></ht-pie-chart>
+                <div class="row justify-content-center" v-if="rows_revenue.length>0">
+                    <h4 class="text-center col-12">Tổng Doanh thu</h4>
+                    <ht-pie-chart :chartdata="chartsRevenueData" :options="options" class="col-lg-6 col-8"></ht-pie-chart>
+                    <div class="col-12"><hr></div>
                 </div>
-
-                <div v-if="rows.length>0">
-                    <div v-for="(chart,index) in chartsData" :key="index" class="mb-5">
-                        <h4 class="text-center">{{chart.title}}</h4>
-                        <ht-pie-chart :chartdata="chart" :options="options"></ht-pie-chart>
-                    </div>
+                <div v-show="rows.length>0" v-for="(chart,index) in chartsData" :key="index" class="row justify-content-center">
+                    <h4 class="text-center col-12">{{chart.title}}</h4>
+                    <ht-pie-chart :chartdata="chart" :options="options" class="col-lg-6 col-8"></ht-pie-chart>
+                    <div class="col-12"><hr></div>
                 </div>
 
             </div>
@@ -70,27 +69,34 @@
                     TRIAL: "rgba(75, 192, 192, 0.2)",
                     ACTIVATE: 'rgba(153, 102, 255, 0.2)',
                     PARTNERTS: 'rgba(255, 159, 64, 0.2)',
-                    'hocThu': "rgba(75, 192, 192, 0.2)",
-                    'daMua': 'rgba(153, 102, 255, 0.2)',
-                    'doiTac': 'rgba(255, 159, 64, 0.2)'
+                    hocThu: "rgba(75, 192, 192, 0.2)",
+                    daMua: 'rgba(153, 102, 255, 0.2)',
+                    cuaBan: 'rgba(153, 102, 255, 0.2)',
+                    doiTac: 'rgba(255, 159, 64, 0.2)'
                 },
                 borderColor: {
                     TRIAL: "rgba(75, 192, 192, 1)",
                     ACTIVATE: 'rgba(153, 102, 255, 1)',
                     PARTNERTS: 'rgba(255, 159, 64, 1)',
-                    'hocThu': "rgba(75, 192, 192, 1)",
-                    'daMua': 'rgba(153, 102, 255, 1)',
-                    'doiTac': 'rgba(255, 159, 64, 1)',
-
+                    hocThu: "rgba(75, 192, 192, 1)",
+                    daMua: 'rgba(153, 102, 255, 1)',
+                    cuaBan: 'rgba(153, 102, 255, 1)',
+                    doiTac: 'rgba(255, 159, 64, 1)',
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    legend: {
+                        labels: {
+                            fontColor: "white",
+                            // fontSize: 18
+                        }
+                    },
                     tooltips: {
                         callbacks: {
                             label: function(tooltipItem, data) {
-                                var index = tooltipItem.datasetIndex;
-                                var number = data.datasets[index].data[index];
+                                var index = tooltipItem.index;
+                                var number = data.datasets[0].data[index];
                                 var label = data.labels[index] || '';
 
                                 if (label) {
@@ -119,7 +125,7 @@
                     backgroundColor: [],
                     borderColor: [],
                     data: [],
-                    borderWidth: '1px'
+                    borderWidth: '2px'
                 }
                 this.rows_total.forEach(function (item) {
                     var string = item.type.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -276,5 +282,7 @@
 </script>
 
 <style scoped>
-
+    .chart-container{
+        max-width: 70vw;
+    }
 </style>

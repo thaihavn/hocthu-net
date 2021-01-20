@@ -1,29 +1,28 @@
 <template>
-    <div class="container ">
+    <div class="container bg-secondary">
         <div class="row align-items-center justify-content-center my-3">
             <div class="col-12">
-                <h3 class="text-center">Đại Lý</h3>
+                <h3 class="text-center">Đại lý</h3>
             </div>
             <div class="col-12 col-lg-8">
                 <ul class="nav nav-pills nav-fill">
                     <li class="nav-item">
-                        <router-link :to="{name:'code'}" class="nav-link btn-outline-success ">Bạn</router-link>
+                        <router-link :to="{name:'code'}" class="nav-link btn-outline-success ">Bạn <i class="far fa-smile"></i></router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link :to="{name:'partner'}" class="nav-link btn-outline-success ">Đối tác</router-link>
+                        <router-link :to="{name:'partner'}" class="nav-link btn-outline-success ">Đối tác <i class="fas fa-hand-holding-usd"></i></router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link :to="{name:'source'}" class="nav-link btn-outline-success active">Nguồn</router-link>
+                        <router-link :to="{name:'source'}" class="nav-link btn-outline-success active">Kênh <i class="far fa-handshake"></i></router-link>
                     </li>
                 </ul>
                 <hr>
                 <div class="report-search my-3">
-
                     <div class="form-row">
                             <div class="col">
                                 <div class="form-group">
                                     <div class="form-check text-center">
-                                        <label class="form-check-label" for="sourceTrucTiep">
+                                        <label class="form-check-label text-success" for="sourceTrucTiep">
                                             <input type="radio" class="form-check-input" id="sourceTrucTiep" v-model="source" value="0" >Trực tiếp
                                         </label>
                                     </div>
@@ -32,7 +31,7 @@
                             <div class="col">
                                 <div class="form-group text-center">
                                     <div class="form-check">
-                                        <label class="form-check-label" for="sourceGioiThieu">
+                                        <label class="form-check-label text-success" for="sourceGioiThieu">
                                             <input type="radio" class="form-check-input" id="sourceGioiThieu" v-model="source" value="1" >Qua giới thiệu
                                         </label>
                                     </div>
@@ -49,32 +48,34 @@
 
                 <hr>
             </div>
-            <div class="table-responsive">
-                <h4 class="text-center">Người giới thiệu</h4>
-                <table class="table table-striped table-hover ">
-                    <thead class="thead-inverse">
-                    <tr >
-                        <th class="col-5">Họ tên</th>
-                        <th class="col-2">SĐT</th>
-                        <th class="col-2">Xác nhận</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="row in rows" :key="row.id" v-bind:class="{'text-success':row.confirm>0 ,'text-warning':row.confirm==0,'text-danger':row.confirm=='-1' }">
-                        <td class="align-middle" scope="row"><span class="text-nowrap">{{row.fullName}}</span></td>
-                        <td class="align-middle">{{row.phone}}</td>
-                        <td class="align-middle text-right" >
-                            <div class="btn-group " role="group" aria-label="Basic example" >
+                <div class="col-12">
+                    <h4 class="text-center">Người giới thiệu</h4>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover text-white">
+                            <thead class="thead-inverse">
+                            <tr class="text-success">
+                                <th >Họ tên</th>
+                                <th nowrap >Điện thoại</th>
+                                <th  nowrap>Xác nhận</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="row in rows" :key="row.id" >
+                                <td class="align-middle" scope="row"><span class="text-nowrap">{{row.fullName}}</span></td>
+                                <td class="align-middle">{{row.phone}}</td>
+                                <td class="align-middle text-right" >
+                                    <div class="btn-group " role="group" aria-label="Basic example" >
                                 <span class="text-nowrap">
 								<div class="btn btn-success" v-if="row.confirm==0" @click="confirmIntroducer(row)">Xác nhận</div>
 								<div class="btn btn-danger" @click="deleteIntroducer(row)">Hủy</div>
 								</span>
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
         </div>
     </div>
     <!-- Modal -->
@@ -171,7 +172,8 @@
                     if (res.data.status == "SUCCESS") {
                         me.$store.dispatch('user/updateSource',me.source);
                         me.rows = res.data.response;
-                        window.cmsHattApp.showSuccess({message: "Cập nhật nguồn thành công!"});
+                        message = window.cmsHattApp.getMessage(res.data) ?? "Cập nhật nguồn thành công!";
+                        window.cmsHattApp.showSuccess({message: message});
                     }else{
                         message = window.cmsHattApp.getMessage(res.data) ?? "Có lỗi. Vui lòng thử lại!";
                         window.cmsHattApp.showError({message:message});

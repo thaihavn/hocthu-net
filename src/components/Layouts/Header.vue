@@ -2,7 +2,7 @@
     <header v-if="this.$store.state.user.isLogin">
         <div class="text-right">
             {{this.$store.state.user.user.fullName}}
-            <a class="btn" v-on:click="logout()">Đăng xuất</a>
+            <a class="btn text-white" v-on:click="logout()"><i class="fas fa-times" style="font-size:24px"></i></a>
         </div>
     </header>
 </template>

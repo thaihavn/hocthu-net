@@ -1,35 +1,36 @@
 <template>
     <div class="container ">
-        <div class="row align-items-center justify-content-center my-5">
+        <div class="row align-items-center justify-content-center my-3">
             <div class="col-12">
-                <h3 class="text-center">Thống kê</h3>
+                <h3 class="text-center">Báo cáo</h3>
             </div>
             <div class="col-12 col-lg-8">
                 <ul class="nav nav-pills nav-fill">
                     <li class="nav-item">
-                        <router-link :to="{name:'report_chart'}" class="nav-link btn-outline-success ">Biểu đồ <i class="fas fa-chart-pie"></i></router-link>
+                        <router-link :to="{name:'report_chart'}" class="nav-link btn-outline-success ">Tổng hợp <i class="fas fa-chart-pie"></i></router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link :to="{name:'report_list'}" class="nav-link btn-outline-success active">Danh sách <i class="fas fa-list"></i></router-link>
+                        <router-link :to="{name:'report_list'}" class="nav-link btn-outline-success active">Chi tiết <i class="fas fa-list"></i></router-link>
                     </li>
                 </ul>
+                <hr>
                 <div class="report-search my-2">
 
                     <div class="form-row">
                         <div class="col">
-                            <label class="font-weight-bold">Ngày bắt đầu</label>
+                            <label class="font-weight-bold text-success">Ngày bắt đầu</label>
                             <input type="text" v-model="form.date1" class="form-control has-datepicker" placeholder="dd-mm-yyyy" ref="date1">
                         </div>
                         <div class="col">
-                            <label class="font-weight-bold">Ngày kết thúc</label>
+                            <label class="font-weight-bold text-success">Ngày kết thúc</label>
                             <input type="text" v-model="form.date2" class="form-control has-datepicker" placeholder="dd-mm-yyyy" ref="date2">
                         </div>
                     </div>
                     <div class="form-row my-2">
                         <div class="col text-center">
-                            <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="daMua" name="daMua" v-model="form.type" :value="1">
-                                <label class="custom-control-label" for="daMua">Đã mua</label>
+                            <div class="custom-control custom-checkbox" >
+                                <input type="checkbox" class="custom-control-input" id="daMua" name="daMua" v-model="type_select" :value="1">
+                                <label class="custom-control-label text-success" for="daMua">Đã mua</label>
                             </div>
                         </div>
                         <div class="col">
@@ -42,30 +43,43 @@
                 <hr>
             </div>
             <div class="col-12 col-lg-8">
+                <div class="my-2">
+                    <div class=" d-flex justify-content-between align-items-center text-white-50" v-if="agency">{{agency.type}}<span class="text-white">{{formatNumber(agency.total)}}</span></div>
+                    <div class=" d-flex justify-content-between align-items-center text-white-50" v-if="partner">{{partner.type}}<span class="text-white">{{formatNumber(partner.total)}}</span></div>
+                    <div class=" d-flex justify-content-between align-items-center text-white-50 border-top" v-if="total">{{total.type}}<span class="text-white">{{formatNumber(total.total)}}</span></div>
+                </div>
                 <h4 class="text-center">Danh sách</h4>
                 <div class="table-responsive">
-                    <table class="table table-striped table-hover">
+                    <table class="table table-striped table-hover text-white">
                         <thead class="thead-inverse">
-                        <tr>
-                            <th>Điện thoại</th>`
-                            <th>Giá</th>
-                            <th>Ngày</th>
+                        <tr class="text-success text-center">
+                            <th>#</th>
+                            <th nowrap>Điện thoại</th>
+                            <th>%</th>
+                            <th >Ngày</th>
                             <th>Loại</th>
                             <th>Tên</th>
                             <th>Mã</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-for="row in rows" :key="row.id">
-                            <td>{{row.phone}}</td>
-                            <td>{{row.commission}}</td>
-                            <td>{{row.date}}</td>
-                            <td nowrap>{{typeText(row.type)}}</td>
+                        <tr v-for="(row,index) in rows" :key="row.id">
+                            <td>{{index + 1}}</td>
+                            <td nowrap>{{row.phone}}</td>
+                            <td>{{formatNumber(row.commission)}}</td>
+                            <td nowrap >{{row.date}}</td>
+                            <td nowrap >{{typeText(row.type)}}</td>
                             <td nowrap>{{row.fullName}}</td>
                             <td>{{row.trialCode}}</td>
                         </tr>
 
                         </tbody>
+<!--                        <tfoot>-->
+<!--                            <tr>-->
+<!--                                <td colspan="2" class="text-success">Tổng doanh thu</td>-->
+<!--                                <td colspan="5">{{totalCommission}}</td>-->
+<!--                            </tr>-->
+<!--                        </tfoot>-->
                     </table>
                 </div>
             </div>
@@ -76,7 +90,7 @@
 </template>
 
 <script>
-    // import moment from 'moment'
+    import moment from 'moment'
     export default {
         name: "ReportList",
         data() {
@@ -159,18 +173,24 @@
                 form: {
                     date1: null,
                     date2: null,
-                    type: "0"
+                    type: '1'
                 },
                 form_default: {
                     date1: null,
                     date2: null,
-                    type: "0"
+                    type: '1'
                 },
+                type_select: 1,
                 errors: [],
                 onSubmit: false,
+                agency:null,
+                partner:null,
+                total:null,
+
             }
         },
         mounted() {
+
             var me = this;
             var options = {
                 singleDatePicker: true,
@@ -179,11 +199,11 @@
                 disabledPast: true,
                 enableLoading: true,
                 autoUpdateInput:false,
+                opens:'right',
                 locale:{
-                    format:"DD-MM-YYY"
-                }
-
-                // startDate:me.form.date1,
+                    format:"DD-MM-YYYY"
+                },
+                startDate:me.form.date1,
             };
             var options2 = {
                 singleDatePicker: true,
@@ -192,10 +212,11 @@
                 disabledPast: true,
                 enableLoading: true,
                 autoUpdateInput:false,
+                opens:'left',
                 locale:{
-                    format:"DD-MM-YYY"
-                }
-                // startDate:me.form.date2,
+                    format:"DD-MM-YYYY"
+                },
+                startDate:me.form.date2,
             };
 
             this.$nextTick(function () {
@@ -214,14 +235,39 @@
             })
         },
         created() {
-            // var currentDate = moment();
+            this.form.date1  = moment().clone().startOf('month').format('DD-MM-YYYY');
+            this.form.date2  = moment().clone().endOf('month').format('DD-MM-YYYY');
             // var start_date = moment().add('-6 ','months');
             // this.form.date1 = start_date.format('DD-MM-YYYY');
             // this.form.date2 = currentDate.format('DD-MM-YYYY');
             // this.rows = this.rows_default;
             this.fetchData();
         },
+        computed: {
+            // totalCommission() {
+            //     var total = 0;
+            //     if(this.rows){
+            //         window._.forEach(this.rows, function(value) {
+            //             total += value.commission??0;
+            //         })
+            //     }
+            //
+            //     return window.cmsHattApp.formatNumber(total);
+            // }
+        },
+        watch: {
+            type_select: function (val) {
+                if(val){
+                    this.form.type='1';
+                }else{
+                    this.form.type='0';
+                }
+            }
+        },
         methods: {
+            formatNumber(number){
+                return window.cmsHattApp.formatNumber(number);
+            },
             typeText(type) {
                 if (type == "ACTIVATE") {
                     return 'Đã mua'
@@ -251,7 +297,6 @@
                     return true;
                 }
             },
-
             fetchData() {
                 var me = this;
                 if (this.onSubmit) {
@@ -262,12 +307,6 @@
                 }
                 this.onSubmit = true;
                 var api = window.appConfig.api.reportList;
-                if (this.form.type) {
-                    this.form.type = "1"
-                } else {
-                    this.form.type = "0"
-                }
-
                 window.axios({
                     method: api.method,
                     url: api.url,
@@ -278,6 +317,9 @@
                 }).then((res) => {
                     if (res.data.status == "SUCCESS") {
                         me.rows = res.data.response;
+                        me.agency = res.data.agency;
+                        me.partner = res.data.partner;
+                        me.total = res.data.total;
                     }
                 }).catch((err) => {
                     window.cmsHattApp.showError(err);

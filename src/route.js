@@ -35,7 +35,6 @@ export const router = new VueRouter({
         },
         {
             path: "/user",
-            name: 'profile',
             component: User,
             children: [
                 {
@@ -67,16 +66,21 @@ export const router = new VueRouter({
             ]
         },
         {
-            path: "notify",
-            name: 'notify',
-            component: Notify,
-            meta: {
-                requireAuth: true
-            }
+            path: "/notify",
+            component: User,
+            children: [
+                {
+                    path: '',
+                    name: 'notify',
+                    component: Notify,
+                    meta: {
+                        requireAuth: true
+                    },
+                },
+            ]
         },
         {
             path: "/report",
-            name: 'report',
             component: Report,
             meta: {
                 requireAuth: true
@@ -102,7 +106,6 @@ export const router = new VueRouter({
         },
         {
             path: "/agency",
-            name: 'agency',
             component: Agency,
             meta: {
                 requireAuth: true

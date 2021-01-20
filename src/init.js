@@ -23,7 +23,7 @@ window.bootbox = require('bootbox');
 require("./config");
 window.cmsHattApp = {
     formatNumber(number){
-        return  new Intl.NumberFormat('vi-VN', { maximumSignificantDigits: 3 }).format(number);
+        return  new Intl.NumberFormat('en-US', { maximumSignificantDigits: 3 , style: 'decimal' }).format(number);
     },
     makeCapCha(length){
         var result           = '';
@@ -105,10 +105,10 @@ window.cmsHattApp = {
         }
         args.buttons = {
             confirm: {
-                label: '<i class="fa fa-check"></i> Confirm',
+                label: '<i class="fa fa-check"></i> Đồng ý',
             },
             cancel: {
-                label: '<i class="fa fa-times"></i> Cancel',
+                label: '<i class="fa fa-times"></i> Bỏ qua',
             }
         };
         args.centerVertical = true;
@@ -121,10 +121,10 @@ window.cmsHattApp = {
         }
         args.buttons = {
             confirm: {
-                label: '<i class="fa fa-check"></i> Gửi',
+                label: '<i class="fa fa-check"></i> Đồng ý',
             },
             cancel: {
-                label: '<i class="fa fa-times"></i> Cancel',
+                label: '<i class="fa fa-times"></i> Bỏ qua',
             }
         };
         args.centerVertical = true;

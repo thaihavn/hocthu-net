@@ -45,6 +45,10 @@ window.appConfig = {
             url: baseUrl + '/private/add-partner',
             method: "POST",
         },
+        removePartner: {
+            url: baseUrl + '/private/remove-partner',
+            method: "DELETE",
+        },
         //Thông tin giới thiệu
         getIntroducers: {
             url: baseUrl + '/private/get-introducers',
@@ -155,6 +159,7 @@ window.appConfig = {
         PARTNER_ALREADY_ADDED:"Đối tác đã tồn tại. Vui lòng thử lại!",
         INTRODUCER_NOT_FOUND:"Không tìm thấy thông tin người giới thiệu. Vui lòng thử lại!",
         DATE_NOT_VALID:"Ngày không hợp lệ, ngày có dịnh dạng DD-MM-YYYY!",
+        PASSWORD_NOT_MATCH:"Mật khẩu không trùng khớp!"
 
 
     }
