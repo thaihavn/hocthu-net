@@ -54,7 +54,7 @@
                                 <td scope="row" class="align-middle">{{index+1}}</td>
                                 <td><span class="text-nowrap">{{partner.fullName}}</span></td>
                                 <td nowrap class="">{{partner.phone}}</td>
-                                <td class="text-center" v-if="partner.confirm>0"><i class="fa fa-check" title="Đã xác nhận" style="font-size:24px;color:#28a745"></i></td>
+                                <td class="text-center" v-if="partner.confirm>0"><i class="fa fa-check" title="Đã xác nhận" style="font-size:24px;color:#17a2b8"></i></td>
                                 <td class="text-center"  v-if="partner.confirm==0"><i class="fa fa-check-circle" title="Chờ xác nhận" style="font-size:24px;color:#ffc107"></i></td>
                                 <td class="text-center"  v-if="partner.confirm<0"><i class="fas fa-minus-circle" title="Không xác nhận" style="font-size:24px;color:#dc3545"></i></td>
                                 <td class="text-center">
@@ -102,7 +102,7 @@
                     this.errors.push('Bạn chưa nhập Họ tên!');
                 }
                 if(!this.form.phone){
-                    this.errors.push('Bạn chưa nhập số điện thoại!');
+                    this.errors.push('Bạn chưa nhập Điện thoại!');
                 }
                 if(this.errors.length > 0){
                     window.cmsHattApp.showError({

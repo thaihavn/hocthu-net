@@ -93,7 +93,7 @@
             validationForm(){
                 this.errors=[];
                 if(!this.form.trialCode){
-                    this.errors.push('Bạn chưa nhập code!');
+                    this.errors.push('Bạn chưa nhập tên Tài khoản!');
                 }
                 if(this.errors.length > 0){
                     window.cmsHattApp.showError({

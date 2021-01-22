@@ -62,13 +62,13 @@
             validationForm(){
                 this.errors=[];
                 if(!this.form.currentPassword){
-                    this.errors.push('Bạn chưa nhập password cũ!');
+                    this.errors.push('Bạn chưa nhập Mật khẩu hiện tại!');
                 }
                 if(!this.form.newPassword){
-                    this.errors.push('Bạn chưa nhập password mới!');
+                    this.errors.push('Bạn chưa nhập Mật khẩu mới!');
                 }
                 if(!this.form.confirmPassword){
-                    this.errors.push('Bạn chưa nhập lại password mới!');
+                    this.errors.push('Bạn chưa Xác nhận mật khẩu!');
                 }
                 if(this.errors.length > 0){
                     window.cmsHattApp.showError({

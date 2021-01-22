@@ -96,13 +96,12 @@
                         callbacks: {
                             label: function(tooltipItem, data) {
                                 var index = tooltipItem.index;
-                                var number = data.datasets[0].data[index];
+                                var number = data.datasets[0].dataFormat[index];
                                 var label = data.labels[index] || '';
 
                                 if (label) {
                                     label += ': ';
                                 }
-                                number = window.cmsHattApp.formatNumber(number);
                                 label+= number || '';
                                 return label;
                             }
@@ -125,17 +124,18 @@
                     backgroundColor: [],
                     borderColor: [],
                     data: [],
+                    dataFormat: [],
                     borderWidth: '2px'
                 }
                 this.rows_total.forEach(function (item) {
                     var string = item.type.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-
                     data.labels.push(item.type);
-                    dataItem.backgroundColor.push(window._.get(me.backgroundColor, window._.camelCase(string)));
-                    dataItem.borderColor.push(window._.get(me.borderColor, window._.camelCase(string)));
+                    dataItem.backgroundColor.push(item.backgroundColor??window._.get(me.backgroundColor, window._.camelCase(string)));
+                    dataItem.borderColor.push(window._.get(item.borderColor??me.borderColor, window._.camelCase(string)));
                     dataItem.label = item.type;
-                    dataItem.data.push(item.total);
-                    dataItem.label = me.typeText(item.type);
+                    dataItem.data.push(item.totalNumber);
+                    dataItem.dataFormat.push(item.total);
+                    dataItem.label = item.type;
                 });
                 data.datasets.push(dataItem);
 
@@ -153,16 +153,18 @@
                     backgroundColor: [],
                     borderColor: [],
                     data: [],
+                    dataFormat: [],
                     borderWidth: '1px'
                 }
                 this.rows_revenue.forEach(function (item) {
                     var string = item.type.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
                     data.labels.push(item.type);
-                    dataItem.backgroundColor.push(window._.get(me.backgroundColor, window._.camelCase(string)));
-                    dataItem.borderColor.push(window._.get(me.borderColor, window._.camelCase(string)));
+                    dataItem.backgroundColor.push(item.backgroundColor??window._.get(me.backgroundColor, window._.camelCase(string)));
+                    dataItem.borderColor.push(item.borderColor??window._.get(me.borderColor, window._.camelCase(string)));
                     dataItem.label = item.type;
-                    dataItem.data.push(item.total);
-                    dataItem.label = me.typeText(item.type);
+                    dataItem.data.push(item.totalNumber);
+                    dataItem.dataFormat.push(item.total);
+                    dataItem.label = item.type;
                 });
                 data.datasets.push(dataItem);
 
@@ -182,16 +184,18 @@
                         backgroundColor: [],
                         borderColor: [],
                         data: [],
+                        dataFormat: [],
                         borderWidth: '1px'
                     }
                     item.forEach(function (child) {
                         var string = child.type.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
                         data.title = "Mã " + child.reportCode;
                         data.labels.push(child.type);
-                        dataItem.backgroundColor.push(window._.get(me.backgroundColor, window._.camelCase(string)));
-                        dataItem.borderColor.push(window._.get(me.borderColor, window._.camelCase(string)));
+                        dataItem.backgroundColor.push(child.backgroundColor??window._.get(me.backgroundColor, window._.camelCase(string)));
+                        dataItem.borderColor.push(child.borderColor??window._.get(me.borderColor, window._.camelCase(string)));
                         dataItem.label = child.reportCode;
-                        dataItem.data.push(child.total)
+                        dataItem.data.push(child.totalNumber)
+                        dataItem.dataFormat.push(child.total);
                     })
                     data.datasets.push(dataItem);
                     chartData.push(data);
@@ -282,7 +286,7 @@
 </script>
 
 <style scoped>
-    .chart-container{
-        max-width: 70vw;
-    }
+    /*.chart-container{*/
+    /*    max-width: 70vw;*/
+    /*}*/
 </style>

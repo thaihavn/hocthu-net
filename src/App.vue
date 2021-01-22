@@ -9,15 +9,27 @@
 
     export default {
         name: 'App',
+        metaInfo: {
+            title: 'HOCTHU.NET',
+
+            meta:[
+                {"http-equiv":"cache-control", content:"max-age=0"},
+                {"http-equiv":"cache-control", content:"no-cache"},
+                {"http-equiv":"expires", content:"0"},
+                {"http-equiv":"pragma", content:"no-cache"},
+            ]
+        },
         created() {
-            this.intervalGetNotify()
-        }, methods: {
-            intervalGetNotify() {
-                var minute = 60 * 2000;
-                setInterval(() => {
-                   this.$store.dispatch('user/getNotifyUnread')
-                }, minute)
-            }
+            this.$store.dispatch('user/getNotifyUnread');
+            // this.intervalGetNotify();
+        },
+        methods: {
+            // intervalGetNotify() {
+            //     var minute = this.$store.state.user.sleep_notify;
+            //     setInterval(() => {
+            //        this.$store.dispatch('user/getNotifyUnread')
+            //     }, minute)
+            // }
         },
     }
 </script>

@@ -44,9 +44,9 @@
             </div>
             <div class="col-12 col-lg-8">
                 <div class="my-2">
-                    <div class=" d-flex justify-content-between align-items-center text-white-50" v-if="agency">{{agency.type}}<span class="text-white">{{formatNumber(agency.total)}}</span></div>
-                    <div class=" d-flex justify-content-between align-items-center text-white-50" v-if="partner">{{partner.type}}<span class="text-white">{{formatNumber(partner.total)}}</span></div>
-                    <div class=" d-flex justify-content-between align-items-center text-white-50 border-top" v-if="total">{{total.type}}<span class="text-white">{{formatNumber(total.total)}}</span></div>
+                    <div class=" d-flex justify-content-between align-items-center text-white-50" v-if="agency">{{agency.type}}<span class="text-white">{{agency.total}}</span></div>
+                    <div class=" d-flex justify-content-between align-items-center text-white-50" v-if="partner">{{partner.type}}<span class="text-white">{{partner.total}}</span></div>
+                    <div class=" d-flex justify-content-between align-items-center text-white-50 border-top" v-if="total">{{total.type}}<span class="text-white">{{total.total}}</span></div>
                 </div>
                 <h4 class="text-center">Danh sách</h4>
                 <div class="table-responsive">
@@ -66,9 +66,9 @@
                         <tr v-for="(row,index) in rows" :key="row.id">
                             <td>{{index + 1}}</td>
                             <td nowrap>{{row.phone}}</td>
-                            <td>{{formatNumber(row.commission)}}</td>
+                            <td>{{row.commission}}</td>
                             <td nowrap >{{row.date}}</td>
-                            <td nowrap >{{typeText(row.type)}}</td>
+                            <td nowrap >{{row.type}}</td>
                             <td nowrap>{{row.fullName}}</td>
                             <td>{{row.trialCode}}</td>
                         </tr>
@@ -236,7 +236,7 @@
         },
         created() {
             this.form.date1  = moment().clone().startOf('month').format('DD-MM-YYYY');
-            this.form.date2  = moment().clone().endOf('month').format('DD-MM-YYYY');
+            this.form.date2  = moment().clone().format('DD-MM-YYYY');
             // var start_date = moment().add('-6 ','months');
             // this.form.date1 = start_date.format('DD-MM-YYYY');
             // this.form.date2 = currentDate.format('DD-MM-YYYY');
@@ -265,9 +265,6 @@
             }
         },
         methods: {
-            formatNumber(number){
-                return window.cmsHattApp.formatNumber(number);
-            },
             typeText(type) {
                 if (type == "ACTIVATE") {
                     return 'Đã mua'

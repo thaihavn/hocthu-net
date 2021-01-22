@@ -1,6 +1,6 @@
 {
   "name": "hocthu",
-  "version": "1.1.5",
+  "version": "1.1.7",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -22,6 +22,7 @@
     "style-loader": "^2.0.0",
     "vue": "^2.6.11",
     "vue-chartjs": "^3.5.1",
+    "vue-meta": "^2.4.0",
     "vue-router": "^3.4.9",
     "vue-select": "^3.10.8",
     "vuex": "^3.5.1"

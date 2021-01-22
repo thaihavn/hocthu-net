@@ -2,7 +2,8 @@ import Vue from 'vue'
 import App from './App.vue'
 import {store} from "./store";
 import {router} from "@/route";
-
+import VueMeta from 'vue-meta';
+Vue.use(VueMeta);
 require("./init.js");
 window.axios.interceptors.response.use(function (response) {
     return response;

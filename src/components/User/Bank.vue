@@ -62,9 +62,9 @@
             }
         },
         created() {
-            if(this.form.accountNumber  == null && this.form.owner == null && this.form.idBank == null ){
-                this.canEdit = true
-            }
+            // if(this.form.accountNumber  == null && this.form.owner == null && this.form.idBank == null ){
+            //     this.canEdit = true
+            // }
             this.getBankAccount();
             var banks =this.$store.state.user.banks;
             if(banks == null){
@@ -105,13 +105,13 @@
             updateBankAccount(e) {
                 e.preventDefault();
                 var me = this;
-                if (this.onSubmit) {
+                if (me.onSubmit) {
                     return false;
                 }
                 if (!this.validationForm()) {
                     return false;
                 }
-                this.onSubmit = true;
+                me.onSubmit = true;
                 window.cmsHattApp.showConfirm({
                     message: "Bạn chắc chắn muốn thay đổi?",
                     callback: function (result) {
@@ -128,10 +128,13 @@
                             }).catch((err) => {
                                 window.cmsHattApp.showError(err);
                             });
+
                         }
                     }
                 })
-                this.onSubmit = false;
+                me.canEdit = false;
+                me.onSubmit = false;
+
             },
             getBankAccount(){
                 var me = this;

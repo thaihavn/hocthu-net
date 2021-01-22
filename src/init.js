@@ -55,7 +55,11 @@ window.cmsHattApp = {
             args.title = "Success";
         }
         args.centerVertical = true;
-        window.bootbox.alert(args);
+        if(typeof args.message !="undefined"){
+            if(args.message!=''){
+                window.bootbox.alert(args);
+            }
+        }
     },
     showError: function (configs) {
         var args = {};
@@ -68,7 +72,12 @@ window.cmsHattApp = {
             args.title = "Warning";
         }
         args.centerVertical = true;
-        window.bootbox.alert(args);
+
+        if(typeof args.message !="undefined"){
+            if(args.message!=''){
+                window.bootbox.alert(args);
+            }
+        }
     },
     showAjaxError: function (e) {
         var json = e.responseJSON;

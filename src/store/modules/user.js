@@ -10,6 +10,7 @@ export default {
         ward: null,
         isLogin: false,
         notify_unread: 0,
+        sleep_notify: 0,
         refresh_count:0
     }),// go day la function cho nen no cu goi lai lien tuc thi phai
     getters: {
@@ -28,7 +29,7 @@ export default {
             state.user.source = source;
         },
         updateNotifyUnRead(state, number) {
-            state.notify_unread = number;
+            state.notify_unread =number??0;
         },
         updateUser(state, userData) {
             if(typeof userData.token !='undefined'){
@@ -60,7 +61,6 @@ export default {
             state.ward = rows;
         },
         updateRefreshCount(state,count){
-            console.log(count);
             state.refresh_count = count;
         }
     },
@@ -68,10 +68,10 @@ export default {
         updateSource({commit}, source) {
             commit('updateSource', source);
         },
-        updateNotifyUnRead({commit}, number) {
+        updateNotifyUnRead({commit},number) {
             commit('updateNotifyUnRead', number);
         },
-        getNotifyUnread({getters,commit}) {
+        getNotifyUnread({getters,commit,dispatch}) {
             if(getters.isLogin){
                 var api = window.appConfig.api.getUnreadNotice;
                 window.axios({
@@ -82,12 +82,16 @@ export default {
                 }).then((response) => {
                     var res = response.data;
                     if (res.status == "SUCCESS") {
-                        commit('updateNotifyUnRead', res.unread ?? 0);
+                        commit('updateNotifyUnRead', res.unread);
+                        if(typeof res.sleep !='undefined'){
+                            setTimeout(function () {
+                                dispatch('getNotifyUnread')
+                            },res.sleep??60000)
+                        }
+
                     }
                 });
             }
-
-
         },
         getProfile({commit}, tokenResponse) {
             return new Promise((resolve, reject) => {
