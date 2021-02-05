@@ -1,5 +1,5 @@
 <template>
-    <div class="container bg-secondary">
+    <div class="container">
         <div class="row align-items-center justify-content-center my-3">
             <div class="col-12">
                 <h3 class="text-center">Đại lý</h3>

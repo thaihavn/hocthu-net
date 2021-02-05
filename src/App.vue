@@ -35,8 +35,8 @@
 </script>
 <style>
     html,body{
-        background-color: #6c757d!important;
-        color: #ffffff;
+        /*background-color: #343a40!important;*/
+        /*color: #ffffff;*/
         padding-bottom: 50px;
     }
     h3,h4,h5{

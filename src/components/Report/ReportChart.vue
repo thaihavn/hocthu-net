@@ -16,29 +16,35 @@
                 </ul>
                 <hr>
             </div>
-            <div class="col-12">
-                <div class="row justify-content-center" v-if="rows_total.length>0">
-                    <h4 class="text-center col-12">Tổng sản lượng</h4>
-                    <ht-pie-chart :chartdata="chartsTotalData" :options="options" class="col-lg-6 col-8"></ht-pie-chart>
-                    <div class="col-12"><hr></div>
-                </div>
-                <div class="row justify-content-center" v-if="rows_revenue.length>0">
-                    <h4 class="text-center col-12">Tổng Doanh thu</h4>
-                    <ht-pie-chart :chartdata="chartsRevenueData" :options="options" class="col-lg-6 col-8"></ht-pie-chart>
-                    <div class="col-12"><hr></div>
-                </div>
-                <div v-show="rows.length>0" v-for="(chart,index) in chartsData" :key="index" class="row justify-content-center">
-                    <h4 class="text-center col-12">{{chart.title}}</h4>
-                    <ht-pie-chart :chartdata="chart" :options="options" class="col-lg-6 col-8"></ht-pie-chart>
-                    <div class="col-12"><hr></div>
-                </div>
 
+        </div>
+        <div class="row justify-content-center" v-if="rows_total.length>0">
+            <h4 class="text-center col-12">Tổng sản lượng</h4>
+            <ht-pie-chart :chartdata="chartsTotalData" :options="options" class="col-lg-6 col-12" :styles="{height: '250px'}"></ht-pie-chart>
+            <div class="col-12">
+                <hr>
+            </div>
+        </div>
+        <div class="row justify-content-center" v-if="rows_revenue.length>0">
+            <h4 class="text-center col-12">Tổng Doanh thu</h4>
+            <ht-pie-chart :chartdata="chartsRevenueData" :options="options" class="col-lg-6 col-12" :styles="{height: '250px'}"></ht-pie-chart>
+            <div class="col-12">
+                <hr>
+            </div>
+        </div>
+        <div v-show="rows.length>0" v-for="(chart,index) in chartsData" :key="index" class="row justify-content-center">
+            <h4 class="text-center col-12">{{chart.title}}</h4>
+            <ht-pie-chart :chartdata="chart" :options="options" class="col-lg-6 col-12" :styles="{height: '250px'}"></ht-pie-chart>
+            <div class="col-12">
+                <hr>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+
+    // import {Pie} from "vue-chartjs";
 
     export default {
         name: "ReportChart",
@@ -60,9 +66,9 @@
                     }
                 ],
                 rows: [],
-                rows_default: [[{"reportCode":"HOA02","total":"1","type":"Học thử"}],[{"reportCode":"HOA01","total":"1","type":"Đã mua"},{"reportCode":"HOA01","total":"1","type":"Học thử"}]],
+                rows_default: [[{"reportCode": "HOA02", "total": "1", "type": "Học thử"}], [{"reportCode": "HOA01", "total": "1", "type": "Đã mua"}, {"reportCode": "HOA01", "total": "1", "type": "Học thử"}]],
                 rows_revenue: [],
-                rows_revenue_default: [{"reportCode":null,"total":"2403000","type":"Bạn"},{"reportCode":null,"total":"614100","type":"Đối tác"}],
+                rows_revenue_default: [{"reportCode": null, "total": "2403000", "type": "Bạn"}, {"reportCode": null, "total": "614100", "type": "Đối tác"}],
                 charts: [],
                 errors: [],
                 backgroundColor: {
@@ -94,15 +100,14 @@
                     },
                     tooltips: {
                         callbacks: {
-                            label: function(tooltipItem, data) {
+                            label: function (tooltipItem, data) {
                                 var index = tooltipItem.index;
                                 var number = data.datasets[0].dataFormat[index];
                                 var label = data.labels[index] || '';
-
                                 if (label) {
                                     label += ': ';
                                 }
-                                label+= number || '';
+                                label += number || '';
                                 return label;
                             }
                         }
@@ -125,13 +130,23 @@
                     borderColor: [],
                     data: [],
                     dataFormat: [],
-                    borderWidth: '2px'
+                    borderWidth: '1'
                 }
                 this.rows_total.forEach(function (item) {
                     var string = item.type.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                    var background =  window._.get(me.backgroundColor, window._.camelCase(string));
+                    var border = window._.get(me.borderColor, window._.camelCase(string))
+                    if (typeof item.bgColor != 'undefined' && typeof item.bgRatio != 'undefined') {
+                        var ratio = item.bgRatio * 100;
+                        background = item.bgColor + (ratio!=100?ratio:'');
+                    }
+                    if (typeof item.borderColor != 'undefined' && typeof item.borderRatio != 'undefined') {
+                        ratio = item.borderRatio * 100;
+                        border = item.borderColor + (ratio!=100?ratio:'');
+                    }
                     data.labels.push(item.type);
-                    dataItem.backgroundColor.push(item.backgroundColor??window._.get(me.backgroundColor, window._.camelCase(string)));
-                    dataItem.borderColor.push(window._.get(item.borderColor??me.borderColor, window._.camelCase(string)));
+                    dataItem.backgroundColor.push(background);
+                    dataItem.borderColor.push(border);
                     dataItem.label = item.type;
                     dataItem.data.push(item.totalNumber);
                     dataItem.dataFormat.push(item.total);
@@ -154,13 +169,23 @@
                     borderColor: [],
                     data: [],
                     dataFormat: [],
-                    borderWidth: '1px'
+                    borderWidth: '1'
                 }
                 this.rows_revenue.forEach(function (item) {
                     var string = item.type.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                    var background =  window._.get(me.backgroundColor, window._.camelCase(string));
+                    var border = window._.get(me.borderColor, window._.camelCase(string))
+                    if (typeof item.bgColor != 'undefined' && typeof item.bgRatio != 'undefined') {
+                        var ratio = item.bgRatio * 100;
+                        background = item.bgColor + (ratio!=100?ratio:'');
+                    }
+                    if (typeof item.borderColor != 'undefined' && typeof item.borderRatio != 'undefined') {
+                        ratio = item.borderRatio * 100;
+                        border = item.borderColor + (ratio!=100?ratio:'');
+                    }
                     data.labels.push(item.type);
-                    dataItem.backgroundColor.push(item.backgroundColor??window._.get(me.backgroundColor, window._.camelCase(string)));
-                    dataItem.borderColor.push(item.borderColor??window._.get(me.borderColor, window._.camelCase(string)));
+                    dataItem.backgroundColor.push(background);
+                    dataItem.borderColor.push(border);
                     dataItem.label = item.type;
                     dataItem.data.push(item.totalNumber);
                     dataItem.dataFormat.push(item.total);
@@ -185,14 +210,24 @@
                         borderColor: [],
                         data: [],
                         dataFormat: [],
-                        borderWidth: '1px'
+                        borderWidth: '1'
                     }
                     item.forEach(function (child) {
                         var string = child.type.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                        var background =  window._.get(me.backgroundColor, window._.camelCase(string));
+                        var border = window._.get(me.borderColor, window._.camelCase(string))
+                        if (typeof child.bgColor != 'undefined' && typeof child.bgRatio != 'undefined') {
+                            var ratio = child.bgRatio * 100;
+                            background = child.bgColor + (ratio!=100?ratio:'');
+                        }
+                        if (typeof child.borderColor != 'undefined' && typeof child.borderRatio != 'undefined') {
+                             ratio = child.borderRatio * 100;
+                            border = child.borderColor + (ratio!=100?ratio:'');
+                        }
                         data.title = "Mã " + child.reportCode;
                         data.labels.push(child.type);
-                        dataItem.backgroundColor.push(child.backgroundColor??window._.get(me.backgroundColor, window._.camelCase(string)));
-                        dataItem.borderColor.push(child.borderColor??window._.get(me.borderColor, window._.camelCase(string)));
+                        dataItem.backgroundColor.push(background);
+                        dataItem.borderColor.push(border);
                         dataItem.label = child.reportCode;
                         dataItem.data.push(child.totalNumber)
                         dataItem.dataFormat.push(child.total);
